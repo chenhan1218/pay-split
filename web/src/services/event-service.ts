@@ -15,6 +15,7 @@ import {
   Event,
   EventSchema,
   CreateEventSchema,
+  CreateEvent,
   UpdateEventSchema,
   Participant,
 } from '@/features/events/schemas';
@@ -88,20 +89,20 @@ export class EventService {
    * @param ownerId The ID of the user creating the event.
    * @returns A Promise that resolves to the newly created Event object.
    */
-  static async createEvent(
-    newEventData: Omit<CreateEventSchema, 'ownerId'>,
-    ownerId: string
-  ): Promise<Event> {
+  static async createEvent(newEventData: CreateEvent, ownerId: string): Promise<Event> {
     try {
       if (!ownerId) {
         throw new Error('Owner ID is required to create an event.');
       }
 
       // Validate incoming data
-      const validatedData = CreateEventSchema.parse({ ...newEventData, ownerId });
+      // The schema doesn't include ownerId, so we shouldn't add it before parsing if the schema doesn't expect it.
+      // Wait, CreateEventSchema in schemas.ts omits ownerId.
+      // So CreateEventSchema checks for name, currency, participants.
+      const validatedData = CreateEventSchema.parse(newEventData);
 
       const participantsWithIds = validatedData.participants.map(
-        (p: Omit<Participant, 'id' | 'linkedUserId'>) => ({
+        (p: Omit<Participant, 'id' | 'linkedUserId'> & { linkedUserId?: string | null }) => ({
           ...p,
           id: doc(collection(db, '_')).id, // Generate a unique ID for each participant
           linkedUserId: p.linkedUserId || null,

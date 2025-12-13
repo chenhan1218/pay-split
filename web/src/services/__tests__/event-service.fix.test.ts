@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { EventService } from '../event-service';
 import { addDoc, collection, doc } from 'firebase/firestore';
 
@@ -35,7 +35,7 @@ describe('EventService Fix Verification', () => {
   describe('createEvent', () => {
     it('should throw a descriptive error if ownerId is undefined (Runtime Check)', async () => {
       // We cast to any to simulate a runtime call where types might be bypassed or inferred incorrectly
-      // @ts-ignore
+      // @ts-expect-error Testing runtime validation for undefined ownerId
       await expect(EventService.createEvent(mockCreateEventData, undefined)).rejects.toThrow(
         'Owner ID is required to create an event.'
       );
@@ -49,14 +49,14 @@ describe('EventService Fix Verification', () => {
 
     it('should NOT call addDoc when ownerId is missing', async () => {
       const mockDocRef = { id: 'new-event-id' };
-      (addDoc as vi.Mock).mockResolvedValueOnce(mockDocRef);
-      (collection as vi.Mock).mockReturnValue({});
-      (doc as vi.Mock).mockReturnValue({ id: 'mock-participant-id' });
+      (addDoc as Mock).mockResolvedValueOnce(mockDocRef);
+      (collection as Mock).mockReturnValue({});
+      (doc as Mock).mockReturnValue({ id: 'mock-participant-id' });
 
       try {
-        // @ts-ignore
+        // @ts-expect-error Testing runtime validation for undefined ownerId
         await EventService.createEvent(mockCreateEventData, undefined);
-      } catch (e) {
+      } catch {
         // Expected error
       }
 
@@ -65,9 +65,9 @@ describe('EventService Fix Verification', () => {
 
     it('should successfully create event when ownerId is provided', async () => {
       const mockDocRef = { id: 'new-event-id' };
-      (addDoc as vi.Mock).mockResolvedValueOnce(mockDocRef);
-      (collection as vi.Mock).mockReturnValue({});
-      (doc as vi.Mock).mockReturnValue({ id: 'mock-participant-id' });
+      (addDoc as Mock).mockResolvedValueOnce(mockDocRef);
+      (collection as Mock).mockReturnValue({});
+      (doc as Mock).mockReturnValue({ id: 'mock-participant-id' });
 
       const validOwnerId = 'user-123';
       const result = await EventService.createEvent(mockCreateEventData, validOwnerId);

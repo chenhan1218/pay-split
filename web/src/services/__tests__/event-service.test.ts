@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { EventService } from '../event-service';
 import { EventSchema } from '../../features/events/schemas';
 import {
@@ -65,12 +65,12 @@ describe('EventService', () => {
   describe('getEventById', () => {
     it('should return an event if found', async () => {
       // Mock getDoc to return an existing document
-      (getDoc as vi.Mock).mockResolvedValueOnce({
+      (getDoc as Mock).mockResolvedValueOnce({
         exists: () => true,
         data: () => ({ ...mockEvent, id: undefined }), // Firebase data usually doesn't include the ID
         id: mockEvent.id,
       });
-      (doc as vi.Mock).mockReturnValue({}); // Mock doc function return value
+      (doc as Mock).mockReturnValue({}); // Mock doc function return value
 
       const result = await EventService.getEventById(mockEvent.id);
       expect(result).toEqual(mockEvent);
@@ -81,11 +81,11 @@ describe('EventService', () => {
 
     it('should return null if event not found', async () => {
       // Mock getDoc to return a non-existing document
-      (getDoc as vi.Mock).mockResolvedValueOnce({
+      (getDoc as Mock).mockResolvedValueOnce({
         exists: () => false,
         data: () => undefined,
       });
-      (doc as vi.Mock).mockReturnValue({});
+      (doc as Mock).mockReturnValue({});
 
       const result = await EventService.getEventById('nonexistent-id');
       expect(result).toBeNull();
@@ -93,8 +93,8 @@ describe('EventService', () => {
 
     it('should throw an error if Firebase call fails', async () => {
       const firebaseError = new Error('Firebase network error');
-      (getDoc as vi.Mock).mockRejectedValueOnce(firebaseError);
-      (doc as vi.Mock).mockReturnValue({});
+      (getDoc as Mock).mockRejectedValueOnce(firebaseError);
+      (doc as Mock).mockReturnValue({});
 
       await expect(EventService.getEventById(mockEvent.id)).rejects.toThrow('Failed to get event');
     });
@@ -103,7 +103,7 @@ describe('EventService', () => {
   // Test getAllEvents
   describe('getAllEvents', () => {
     it('should return all events', async () => {
-      (getDocs as vi.Mock).mockResolvedValueOnce({
+      (getDocs as Mock).mockResolvedValueOnce({
         forEach: (docSnapCallback: (docSnap: { data: () => unknown; id: string }) => void) => {
           docSnapCallback({
             data: () => ({ ...mockEvent, id: undefined }),
@@ -111,9 +111,9 @@ describe('EventService', () => {
           });
         },
       });
-      (collection as vi.Mock).mockReturnValue({});
-      (query as vi.Mock).mockReturnValue({});
-      (orderBy as vi.Mock).mockReturnValue({});
+      (collection as Mock).mockReturnValue({});
+      (query as Mock).mockReturnValue({});
+      (orderBy as Mock).mockReturnValue({});
 
       const result = await EventService.getAllEvents();
 
@@ -126,10 +126,10 @@ describe('EventService', () => {
 
     it('should throw an error if Firebase call fails', async () => {
       const firebaseError = new Error('Firebase query error');
-      (getDocs as vi.Mock).mockRejectedValueOnce(firebaseError);
-      (collection as vi.Mock).mockReturnValue({});
-      (query as vi.Mock).mockReturnValue({});
-      (orderBy as vi.Mock).mockReturnValue({});
+      (getDocs as Mock).mockRejectedValueOnce(firebaseError);
+      (collection as Mock).mockReturnValue({});
+      (query as Mock).mockReturnValue({});
+      (orderBy as Mock).mockReturnValue({});
 
       await expect(EventService.getAllEvents()).rejects.toThrow('Failed to get all events');
     });
@@ -139,9 +139,9 @@ describe('EventService', () => {
   describe('createEvent', () => {
     it('should create a new event and return it', async () => {
       const mockDocRef = { id: 'new-event-id' };
-      (addDoc as vi.Mock).mockResolvedValueOnce(mockDocRef);
-      (collection as vi.Mock).mockReturnValue({}); // Mock collection reference
-      (doc as vi.Mock).mockReturnValue({ id: 'mock-participant-id' }); // Mock for participant ID generation
+      (addDoc as Mock).mockResolvedValueOnce(mockDocRef);
+      (collection as Mock).mockReturnValue({}); // Mock collection reference
+      (doc as Mock).mockReturnValue({ id: 'mock-participant-id' }); // Mock for participant ID generation
 
       const result = await EventService.createEvent(mockCreateEventData, 'creator123');
 
@@ -195,9 +195,9 @@ describe('EventService', () => {
 
     it('should throw an error if Firebase call fails', async () => {
       const firebaseError = new Error('Firebase permission denied');
-      (addDoc as vi.Mock).mockRejectedValueOnce(firebaseError);
-      (collection as vi.Mock).mockReturnValue({});
-      (doc as vi.Mock).mockReturnValue({ id: 'mock-participant-id' });
+      (addDoc as Mock).mockRejectedValueOnce(firebaseError);
+      (collection as Mock).mockReturnValue({});
+      (doc as Mock).mockReturnValue({ id: 'mock-participant-id' });
 
       await expect(EventService.createEvent(mockCreateEventData, 'creator123')).rejects.toThrow(
         'Failed to create event'
@@ -208,8 +208,8 @@ describe('EventService', () => {
   // Test updateEvent
   describe('updateEvent', () => {
     it('should update an existing event', async () => {
-      (updateDoc as vi.Mock).mockResolvedValueOnce(undefined);
-      (doc as vi.Mock).mockReturnValue({});
+      (updateDoc as Mock).mockResolvedValueOnce(undefined);
+      (doc as Mock).mockReturnValue({});
 
       const updateData = { name: 'Updated Event Name' };
       await EventService.updateEvent(mockEvent.id, updateData);
@@ -233,8 +233,8 @@ describe('EventService', () => {
 
     it('should throw an error if Firebase call fails', async () => {
       const firebaseError = new Error('Firebase update error');
-      (updateDoc as vi.Mock).mockRejectedValueOnce(firebaseError);
-      (doc as vi.Mock).mockReturnValue({});
+      (updateDoc as Mock).mockRejectedValueOnce(firebaseError);
+      (doc as Mock).mockReturnValue({});
 
       const updateData = { name: 'Updated Event Name' };
       await expect(EventService.updateEvent(mockEvent.id, updateData)).rejects.toThrow(
@@ -246,8 +246,8 @@ describe('EventService', () => {
   // Test archiveEvent
   describe('archiveEvent', () => {
     it('should archive an event by updating its status', async () => {
-      (updateDoc as vi.Mock).mockResolvedValueOnce(undefined);
-      (doc as vi.Mock).mockReturnValue({});
+      (updateDoc as Mock).mockResolvedValueOnce(undefined);
+      (doc as Mock).mockReturnValue({});
 
       await EventService.archiveEvent(mockEvent.id);
 
@@ -265,8 +265,8 @@ describe('EventService', () => {
   // Test deleteEvent
   describe('deleteEvent', () => {
     it('should delete an event', async () => {
-      (deleteDoc as vi.Mock).mockResolvedValueOnce(undefined);
-      (doc as vi.Mock).mockReturnValue({});
+      (deleteDoc as Mock).mockResolvedValueOnce(undefined);
+      (doc as Mock).mockReturnValue({});
 
       await EventService.deleteEvent(mockEvent.id);
 
@@ -276,8 +276,8 @@ describe('EventService', () => {
 
     it('should throw an error if Firebase call fails', async () => {
       const firebaseError = new Error('Firebase delete error');
-      (deleteDoc as vi.Mock).mockRejectedValueOnce(firebaseError);
-      (doc as vi.Mock).mockReturnValue({});
+      (deleteDoc as Mock).mockRejectedValueOnce(firebaseError);
+      (doc as Mock).mockReturnValue({});
 
       await expect(EventService.deleteEvent(mockEvent.id)).rejects.toThrow(
         'Failed to delete event'
@@ -288,7 +288,7 @@ describe('EventService', () => {
   // Test getEventsByUserId
   describe('getEventsByUserId', () => {
     it('should return a list of events for a given user ID', async () => {
-      (getDocs as vi.Mock).mockResolvedValueOnce({
+      (getDocs as Mock).mockResolvedValueOnce({
         forEach: (docSnapCallback: (docSnap: { data: () => unknown; id: string }) => void) => {
           docSnapCallback({
             data: () => ({ ...mockEvent, id: undefined }),
@@ -296,10 +296,10 @@ describe('EventService', () => {
           });
         },
       });
-      (collection as vi.Mock).mockReturnValue({});
-      (query as vi.Mock).mockReturnValue({});
-      (where as vi.Mock).mockReturnValue({});
-      (orderBy as vi.Mock).mockReturnValue({});
+      (collection as Mock).mockReturnValue({});
+      (query as Mock).mockReturnValue({});
+      (where as Mock).mockReturnValue({});
+      (orderBy as Mock).mockReturnValue({});
 
       const result = await EventService.getEventsByUserId('user123');
 
@@ -314,13 +314,13 @@ describe('EventService', () => {
     });
 
     it('should return an empty array if no events found for user ID', async () => {
-      (getDocs as vi.Mock).mockResolvedValueOnce({
+      (getDocs as Mock).mockResolvedValueOnce({
         forEach: () => {},
       });
-      (collection as vi.Mock).mockReturnValue({});
-      (query as vi.Mock).mockReturnValue({});
-      (where as vi.Mock).mockReturnValue({});
-      (orderBy as vi.Mock).mockReturnValue({});
+      (collection as Mock).mockReturnValue({});
+      (query as Mock).mockReturnValue({});
+      (where as Mock).mockReturnValue({});
+      (orderBy as Mock).mockReturnValue({});
 
       const result = await EventService.getEventsByUserId('nonexistent-user');
       expect(result).toEqual([]);
@@ -328,11 +328,11 @@ describe('EventService', () => {
 
     it('should throw an error if Firebase call fails', async () => {
       const firebaseError = new Error('Firebase query error');
-      (getDocs as vi.Mock).mockRejectedValueOnce(firebaseError);
-      (collection as vi.Mock).mockReturnValue({});
-      (query as vi.Mock).mockReturnValue({});
-      (where as vi.Mock).mockReturnValue({});
-      (orderBy as vi.Mock).mockReturnValue({});
+      (getDocs as Mock).mockRejectedValueOnce(firebaseError);
+      (collection as Mock).mockReturnValue({});
+      (query as Mock).mockReturnValue({});
+      (where as Mock).mockReturnValue({});
+      (orderBy as Mock).mockReturnValue({});
 
       await expect(EventService.getEventsByUserId('user123')).rejects.toThrow(
         'Failed to get events by user ID'
@@ -343,7 +343,7 @@ describe('EventService', () => {
   // Test getEventsByOwnerId
   describe('getEventsByOwnerId', () => {
     it('should return a list of events for a given owner ID', async () => {
-      (getDocs as vi.Mock).mockResolvedValueOnce({
+      (getDocs as Mock).mockResolvedValueOnce({
         forEach: (docSnapCallback: (docSnap: { data: () => unknown; id: string }) => void) => {
           docSnapCallback({
             data: () => ({ ...mockEvent, id: undefined }),
@@ -351,10 +351,10 @@ describe('EventService', () => {
           });
         },
       });
-      (collection as vi.Mock).mockReturnValue({});
-      (query as vi.Mock).mockReturnValue({});
-      (where as vi.Mock).mockReturnValue({});
-      (orderBy as vi.Mock).mockReturnValue({});
+      (collection as Mock).mockReturnValue({});
+      (query as Mock).mockReturnValue({});
+      (where as Mock).mockReturnValue({});
+      (orderBy as Mock).mockReturnValue({});
 
       const result = await EventService.getEventsByOwnerId('user123');
 
@@ -367,13 +367,13 @@ describe('EventService', () => {
     });
 
     it('should return an empty array if no events found for owner ID', async () => {
-      (getDocs as vi.Mock).mockResolvedValueOnce({
+      (getDocs as Mock).mockResolvedValueOnce({
         forEach: () => {},
       });
-      (collection as vi.Mock).mockReturnValue({});
-      (query as vi.Mock).mockReturnValue({});
-      (where as vi.Mock).mockReturnValue({});
-      (orderBy as vi.Mock).mockReturnValue({});
+      (collection as Mock).mockReturnValue({});
+      (query as Mock).mockReturnValue({});
+      (where as Mock).mockReturnValue({});
+      (orderBy as Mock).mockReturnValue({});
 
       const result = await EventService.getEventsByOwnerId('nonexistent-owner');
       expect(result).toEqual([]);
@@ -381,11 +381,11 @@ describe('EventService', () => {
 
     it('should throw an error if Firebase call fails', async () => {
       const firebaseError = new Error('Firebase query error');
-      (getDocs as vi.Mock).mockRejectedValueOnce(firebaseError);
-      (collection as vi.Mock).mockReturnValue({});
-      (query as vi.Mock).mockReturnValue({});
-      (where as vi.Mock).mockReturnValue({});
-      (orderBy as vi.Mock).mockReturnValue({});
+      (getDocs as Mock).mockRejectedValueOnce(firebaseError);
+      (collection as Mock).mockReturnValue({});
+      (query as Mock).mockReturnValue({});
+      (where as Mock).mockReturnValue({});
+      (orderBy as Mock).mockReturnValue({});
 
       await expect(EventService.getEventsByOwnerId('user123')).rejects.toThrow(
         'Failed to get events by owner ID'
