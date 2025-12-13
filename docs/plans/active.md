@@ -29,7 +29,6 @@
   - [x] 安裝 `firebase` 與 `zod` (用於環境變數驗證)。
   - [x] 建立 `web/src/config/env.ts` 進行 Type-safe Env 驗證。
   - [x] 建立 `web/src/lib/firebase.ts` 初始化 Firebase App。
-  - [ ] **Firebase App Check**: 設定 Firebase App Check 以保護後端資源。
   - [x] 建立 `web/.env.example` 範本。
 - [x] **Document Environment Variables**: 更新 `web/README.md`，加入 Firebase 環境變數設定說明。
 - [x] **Refine Core Data Model**: 更新 `docs/specs/core_data_model.md` 以支援更靈活的交易紀錄。
@@ -58,3 +57,4 @@
 - [x] **Feature: Transactions (交易紀錄)**
   - [x] **Transaction List**: 在活動內顯示消費/轉帳列表。
   - [x] **Add Transaction**: 新增消費或轉帳的表單 (整合 `react-hook-form` + `zod`)。
+- [ ] **Modernize UI**: 全面翻新使用者介面，以提供更現代化且行動裝置友善的體驗。

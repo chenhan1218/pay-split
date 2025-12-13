@@ -13,3 +13,4 @@
 ## Technical Debt / Infrastructure
 
 - **Vercel Deployment**: 設定 Next.js 專案於 Vercel 自動部署，包含 Preview Deployment。
+- **Firebase App Check**: 設定 Firebase App Check 以保護後端資源。
