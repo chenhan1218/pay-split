@@ -1,10 +1,9 @@
-import { CreateEventDialog } from '@/components/create-event-dialog';
+import { CreateEventDialog } from '@/features/events/components/create-event-dialog';
 import { EventService } from '@/services/event-service';
 import { Event } from '@/features/events/schemas';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-// import { PlusIcon } from "lucide-react"; // Removed unused import
-// import { Button } from "@/components/ui/button"; // Removed unused import
+import { WalletIcon } from 'lucide-react';
 
 export default async function Home() {
   const events = await EventService.getAllEvents();
@@ -17,14 +16,21 @@ export default async function Home() {
       </div>
 
       {events.length === 0 ? (
-        <div className="text-center text-gray-500">
-          No events created yet. Start by creating a new event!
+        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center animate-in fade-in-50">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
+            <WalletIcon className="h-6 w-6 text-foreground" />
+          </div>
+          <h3 className="mt-4 text-lg font-semibold">No events created yet</h3>
+          <p className="mb-4 mt-2 text-sm text-muted-foreground">
+            Get started by creating a new event to track expenses with friends.
+          </p>
+          <CreateEventDialog />
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {events.map((event: Event) => (
             <Link key={event.id} href={`/events/${event.id}`}>
-              <Card className="transition-shadow duration-200 hover:shadow-lg">
+              <Card className="transition-all hover:scale-[1.02] hover:shadow-md">
                 <CardHeader>
                   <CardTitle>{event.name}</CardTitle>
                   <CardDescription>

@@ -1,9 +1,9 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { PlusIcon } from 'lucide-react';
+import { PlusIcon, Trash2Icon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -57,11 +57,28 @@ export function CreateEventDialog() {
     },
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'participants',
+  });
+
   const onSubmit = async (values: FormValues) => {
     try {
       // TODO: Replace with actual authenticated user ID when auth is implemented
       const tempOwnerId = 'temp-owner-id';
-      const newEvent = await EventService.createEvent(values, tempOwnerId);
+      // Ensure participants have IDs if added dynamically without them (though our schema handles creation)
+      // Actually, for new participants added via UI, we might need to generate temporary IDs or let backend handle it?
+      // The schema expects { id: string, name: string }.
+      // Let's generate a random ID for new participants here.
+      const participantsWithIds = values.participants.map((p) => ({
+        ...p,
+        id: p.id || `temp-${Math.random().toString(36).substr(2, 9)}`,
+      }));
+
+      const newEvent = await EventService.createEvent(
+        { ...values, participants: participantsWithIds },
+        tempOwnerId
+      );
       toast.success('Event created successfully!');
       setOpen(false); // Close dialog on success
       form.reset(); // Reset form fields
@@ -74,7 +91,11 @@ export function CreateEventDialog() {
 
   useEffect(() => {
     if (!open) {
-      form.reset(); // Reset form when dialog closes
+      form.reset({
+        name: '',
+        currency: 'TWD',
+        participants: [{ id: 'temp-user-1', name: 'You' }],
+      });
     }
   }, [open, form]);
 
@@ -118,33 +139,56 @@ export function CreateEventDialog() {
                 </FormItem>
               )}
             />
-            {/* Participants Field - simplified for now */}
-            <FormField
-              control={form.control}
-              name="participants"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Participants (comma separated)</FormLabel>
-                  <FormControl>
-                    {/* Simplified for now, will implement proper participant management later */}
-                    <Input
-                      placeholder="You, Alice, Bob"
-                      value={field.value.map((p) => p.name).join(', ')}
-                      onChange={(e) => {
-                        const names = e.target.value
-                          .split(',')
-                          .map((name) => name.trim())
-                          .filter(Boolean);
-                        field.onChange(
-                          names.map((name, index) => ({ id: `temp-user-${index + 1}`, name }))
-                        );
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
+            <div className="space-y-2">
+              <FormLabel>Participants</FormLabel>
+              {fields.map((field, index) => (
+                <div key={field.id} className="flex items-center gap-2">
+                  <FormField
+                    control={form.control}
+                    name={`participants.${index}.name`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormControl>
+                          <Input placeholder="Name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {index > 0 && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => remove(index)}
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2Icon className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="mt-2"
+                onClick={() =>
+                  append({
+                    id: `temp-${Math.random().toString(36).substr(2, 9)}`,
+                    name: '',
+                  })
+                }
+              >
+                <PlusIcon className="mr-2 h-4 w-4" /> Add Participant
+              </Button>
+              <FormMessage>
+                {form.formState.errors.participants?.message ||
+                  form.formState.errors.participants?.root?.message}
+              </FormMessage>
+            </div>
+
             <DialogFooter>
               <Button type="submit">Create Event</Button>
             </DialogFooter>
