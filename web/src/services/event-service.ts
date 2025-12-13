@@ -30,6 +30,9 @@ export class EventService {
    */
   static async getEventById(eventId: string): Promise<Event | null> {
     try {
+      if (!eventId) {
+        throw new Error('Event ID is required to get an event.');
+      }
       const eventDocRef = doc(db, EVENTS_COLLECTION, eventId);
       const eventDocSnap = await getDoc(eventDocRef);
 
