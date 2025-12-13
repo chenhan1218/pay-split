@@ -46,4 +46,4 @@ jobs:
       - name: Test Web
         run: |
           cd web
-          npm run test -- --coverage
+          npm run test -- run
