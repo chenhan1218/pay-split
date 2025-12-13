@@ -22,10 +22,14 @@
 - [x] **CI/CD**: 建立 GitHub Actions 自動化流程。
   - [x] 建立 `.github/workflows/ci.yml`: 包含 Linting, Type Check, Testing (利用 Root Tooling)。
   - [x] 建立 `.github/workflows/deploy.yml`: 整合 Vercel CLI 進行部署 (需設定 Secrets)。
+- [ ] **Type Check Script**: 在 `web/` 中新增 `type-check` script 並整合至 CI。
+  - [ ] 新增 `type-check` script (`tsc --noEmit`) 至 `web/package.json`。
+  - [ ] 更新 `.github/workflows/ci.yml` 加入 `type-check` 步驟。
 - [x] **Setup**: 安裝並設定 Firebase SDK。
   - [x] 安裝 `firebase` 與 `zod` (用於環境變數驗證)。
   - [x] 建立 `web/src/config/env.ts` 進行 Type-safe Env 驗證。
   - [x] 建立 `web/src/lib/firebase.ts` 初始化 Firebase App。
+  - [ ] **Firebase App Check**: 設定 Firebase App Check 以保護後端資源。
   - [x] 建立 `web/.env.example` 範本。
 - [x] **Document Environment Variables**: 更新 `web/README.md`，加入 Firebase 環境變數設定說明。
 - [x] **Refine Core Data Model**: 更新 `docs/specs/core_data_model.md` 以支援更靈活的交易紀錄。
