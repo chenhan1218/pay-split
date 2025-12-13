@@ -90,6 +90,10 @@ export class EventService {
     ownerId: string
   ): Promise<Event> {
     try {
+      if (!ownerId) {
+        throw new Error('Owner ID is required to create an event.');
+      }
+
       // Validate incoming data
       const validatedData = CreateEventSchema.parse({ ...newEventData, ownerId });
 
