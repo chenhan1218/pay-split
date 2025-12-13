@@ -28,7 +28,7 @@ export class EventService {
    * @param eventId The ID of the event.
    * @returns A Promise that resolves to the Event object, or null if not found.
    */
-  async getEventById(eventId: string): Promise<Event | null> {
+  static async getEventById(eventId: string): Promise<Event | null> {
     try {
       const eventDocRef = doc(db, EVENTS_COLLECTION, eventId);
       const eventDocSnap = await getDoc(eventDocRef);
@@ -54,12 +54,38 @@ export class EventService {
   }
 
   /**
+   * Retrieves all events.
+   * @returns A Promise that resolves to an array of all Event objects.
+   */
+  static async getAllEvents(): Promise<Event[]> {
+    try {
+      const eventsRef = collection(db, EVENTS_COLLECTION);
+      const q = query(eventsRef, orderBy('updatedAt', 'desc'));
+      const querySnapshot = await getDocs(q);
+      const events: Event[] = [];
+      querySnapshot.forEach((docSnap) => {
+        const eventData = { ...docSnap.data(), id: docSnap.id };
+        events.push(EventSchema.parse(eventData));
+      });
+      return events;
+    } catch (error) {
+      console.error('Error fetching all events:', error);
+      if (error instanceof FirebaseError) {
+        throw new Error(`Firebase Error: ${error.message}`);
+      }
+      throw new Error(
+        `Failed to get all events: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
+  }
+
+  /**
    * Creates a new Event.
    * @param newEventData The data for the new event.
    * @param ownerId The ID of the user creating the event.
    * @returns A Promise that resolves to the newly created Event object.
    */
-  async createEvent(
+  static async createEvent(
     newEventData: Omit<CreateEventSchema, 'ownerId'>,
     ownerId: string
   ): Promise<Event> {
@@ -106,7 +132,7 @@ export class EventService {
    * @param updateData The partial data to update the event with.
    * @returns A Promise that resolves when the update is complete.
    */
-  async updateEvent(eventId: string, updateData: Partial<Event>): Promise<void> {
+  static async updateEvent(eventId: string, updateData: Partial<Event>): Promise<void> {
     try {
       // Validate update data against a partial schema
       const validatedData = UpdateEventSchema.parse(updateData);
@@ -132,7 +158,7 @@ export class EventService {
    * @param eventId The ID of the event to archive.
    * @returns A Promise that resolves when the event is archived.
    */
-  async archiveEvent(eventId: string): Promise<void> {
+  static async archiveEvent(eventId: string): Promise<void> {
     await this.updateEvent(eventId, { status: 'archived' });
   }
 
@@ -141,7 +167,7 @@ export class EventService {
    * @param eventId The ID of the event to delete.
    * @returns A Promise that resolves when the event is deleted.
    */
-  async deleteEvent(eventId: string): Promise<void> {
+  static async deleteEvent(eventId: string): Promise<void> {
     try {
       const eventDocRef = doc(db, EVENTS_COLLECTION, eventId);
       await deleteDoc(eventDocRef);
@@ -161,7 +187,7 @@ export class EventService {
    * @param userId The ID of the user.
    * @returns A Promise that resolves to an array of Event objects.
    */
-  async getEventsByUserId(userId: string): Promise<Event[]> {
+  static async getEventsByUserId(userId: string): Promise<Event[]> {
     try {
       const eventsRef = collection(db, EVENTS_COLLECTION);
       const q = query(
@@ -193,7 +219,7 @@ export class EventService {
    * @param ownerId The ID of the user.
    * @returns A Promise that resolves to an array of Event objects.
    */
-  async getEventsByOwnerId(ownerId: string): Promise<Event[]> {
+  static async getEventsByOwnerId(ownerId: string): Promise<Event[]> {
     try {
       const eventsRef = collection(db, EVENTS_COLLECTION);
       const q = query(eventsRef, where('ownerId', '==', ownerId), orderBy('updatedAt', 'desc'));
