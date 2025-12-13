@@ -1,10 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { EventService } from '../event-service';
-import {
-  addDoc,
-  collection,
-  doc,
-} from 'firebase/firestore';
+import { addDoc, collection, doc } from 'firebase/firestore';
 
 // Mock Firebase Firestore functions
 vi.mock('firebase/firestore', () => ({
@@ -32,7 +28,6 @@ const mockCreateEventData = {
 };
 
 describe('EventService Fix Verification', () => {
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -41,11 +36,15 @@ describe('EventService Fix Verification', () => {
     it('should throw a descriptive error if ownerId is undefined (Runtime Check)', async () => {
       // We cast to any to simulate a runtime call where types might be bypassed or inferred incorrectly
       // @ts-ignore
-      await expect(EventService.createEvent(mockCreateEventData, undefined)).rejects.toThrow('Owner ID is required to create an event.');
+      await expect(EventService.createEvent(mockCreateEventData, undefined)).rejects.toThrow(
+        'Owner ID is required to create an event.'
+      );
     });
 
     it('should throw a descriptive error if ownerId is an empty string', async () => {
-      await expect(EventService.createEvent(mockCreateEventData, '')).rejects.toThrow('Owner ID is required to create an event.');
+      await expect(EventService.createEvent(mockCreateEventData, '')).rejects.toThrow(
+        'Owner ID is required to create an event.'
+      );
     });
 
     it('should NOT call addDoc when ownerId is missing', async () => {
@@ -77,7 +76,7 @@ describe('EventService Fix Verification', () => {
         expect.anything(),
         expect.objectContaining({
           ownerId: validOwnerId,
-          name: mockCreateEventData.name
+          name: mockCreateEventData.name,
         })
       );
       expect(result.ownerId).toBe(validOwnerId);

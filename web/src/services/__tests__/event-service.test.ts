@@ -57,7 +57,6 @@ const mockCreateEventData = {
 };
 
 describe('EventService', () => {
-
   beforeEach(() => {
     vi.clearAllMocks(); // Clear mocks before each test
   });
@@ -280,7 +279,9 @@ describe('EventService', () => {
       (deleteDoc as vi.Mock).mockRejectedValueOnce(firebaseError);
       (doc as vi.Mock).mockReturnValue({});
 
-      await expect(EventService.deleteEvent(mockEvent.id)).rejects.toThrow('Failed to delete event');
+      await expect(EventService.deleteEvent(mockEvent.id)).rejects.toThrow(
+        'Failed to delete event'
+      );
     });
   });
 
