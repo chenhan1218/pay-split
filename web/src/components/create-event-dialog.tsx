@@ -59,7 +59,9 @@ export function CreateEventDialog() {
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const newEvent = await EventService.createEvent(values);
+      // TODO: Replace with actual authenticated user ID when auth is implemented
+      const tempOwnerId = 'temp-owner-id';
+      const newEvent = await EventService.createEvent(values, tempOwnerId);
       toast.success('Event created successfully!');
       setOpen(false); // Close dialog on success
       form.reset(); // Reset form fields
