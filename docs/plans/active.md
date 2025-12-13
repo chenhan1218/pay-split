@@ -57,4 +57,8 @@
 - [x] **Feature: Transactions (交易紀錄)**
   - [x] **Transaction List**: 在活動內顯示消費/轉帳列表。
   - [x] **Add Transaction**: 新增消費或轉帳的表單 (整合 `react-hook-form` + `zod`)。
-- [ ] **Modernize UI**: 全面翻新使用者介面，以提供更現代化且行動裝置友善的體驗。
+- [x] **Modernize UI**: 全面翻新使用者介面，以提供更現代化且行動裝置友善的體驗。
+  - [x] **Refactor Structure**: 將 Feature-specific components 移至 `features/` 目錄。
+  - [x] **Enhance Create Event**: 實作動態參與者列表 (Dynamic Participant List)。
+  - [x] **Enhance Add Transaction**: 實作更完整的付款人與分帳對象選擇 (Paid By selector & Split participants)。
+  - [x] **UI Polish**: 優化 Empty States 與 Mobile View。
