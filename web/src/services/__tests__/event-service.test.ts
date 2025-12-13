@@ -255,8 +255,8 @@ describe('EventService', () => {
   describe('getEventsByUserId', () => {
     it('should return a list of events for a given user ID', async () => {
       (getDocs as vi.Mock).mockResolvedValueOnce({
-        forEach: (callback: (docSnap: { data: () => unknown; id: string }) => void) => {
-          callback({
+        forEach: (docSnapCallback: (docSnap: { data: () => unknown; id: string }) => void) => {
+          docSnapCallback({
             data: () => ({ ...mockEvent, id: undefined }),
             id: mockEvent.id,
           });
@@ -281,7 +281,7 @@ describe('EventService', () => {
 
     it('should return an empty array if no events found for user ID', async () => {
       (getDocs as vi.Mock).mockResolvedValueOnce({
-        forEach: (callback: (docSnap: { data: () => unknown; id: string }) => void) => {},
+        forEach: () => {},
       });
       (collection as vi.Mock).mockReturnValue({});
       (query as vi.Mock).mockReturnValue({});
@@ -310,8 +310,8 @@ describe('EventService', () => {
   describe('getEventsByOwnerId', () => {
     it('should return a list of events for a given owner ID', async () => {
       (getDocs as vi.Mock).mockResolvedValueOnce({
-        forEach: (callback: (docSnap: { data: () => unknown; id: string }) => void) => {
-          callback({
+        forEach: (docSnapCallback: (docSnap: { data: () => unknown; id: string }) => void) => {
+          docSnapCallback({
             data: () => ({ ...mockEvent, id: undefined }),
             id: mockEvent.id,
           });
@@ -334,7 +334,7 @@ describe('EventService', () => {
 
     it('should return an empty array if no events found for owner ID', async () => {
       (getDocs as vi.Mock).mockResolvedValueOnce({
-        forEach: (callback: (docSnap: { data: () => unknown; id: string }) => void) => {},
+        forEach: () => {},
       });
       (collection as vi.Mock).mockReturnValue({});
       (query as vi.Mock).mockReturnValue({});

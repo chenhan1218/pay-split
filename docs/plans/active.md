@@ -38,3 +38,20 @@
   - [x] **Event Service**: 實作 `Event` 的 CRUD 邏輯 (Firebase)。
   - [x] **Transaction Service**: 實作 `Transaction` (Expense/Transfer) 的 CRUD 邏輯 (Firebase)。
   - [x] **Service Testing**: 為上述服務撰寫單元測試 (Vitest)。
+
+## Phase 3: Core UI Implementation (Current Focus)
+
+目標：基於 Shadcn UI 實作使用者介面，並串接 Phase 2 完成的後端 Services。
+
+### Status: ✅ UI 實作完成
+
+- [x] **Layout & Navigation (佈局與導航)**
+  - [x] 實作全域 Layout (Navbar, 手機版響應式容器)。
+  - [x] 設定 Shadcn UI Theme 與全域樣式。
+- [x] **Feature: Events (活動群組)**
+  - [x] **Event List**: 在首頁顯示參與的所有活動。
+  - [x] **Create Event**: 建立新活動的對話框或頁面。
+  - [x] **Event Detail**: 單一活動的儀表板 (Dashboard)。
+- [x] **Feature: Transactions (交易紀錄)**
+  - [x] **Transaction List**: 在活動內顯示消費/轉帳列表。
+  - [x] **Add Transaction**: 新增消費或轉帳的表單 (整合 `react-hook-form` + `zod`)。

@@ -14,7 +14,7 @@
 
 ## Technical Architecture
 
-- **Frontend Framework**: Next.js (React)
+- **Frontend Framework**: Next.js (React 18)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **State Management**: React Context / Hooks (initially)

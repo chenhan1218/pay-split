@@ -2,6 +2,16 @@
 
 This is the frontend web application for Pay-Split, built with Next.js, TypeScript, Tailwind CSS, and Shadcn UI.
 
+## Key Technologies
+
+- **Next.js**: 16.0.8 (App Router)
+- **React**: ^18.3.0
+- **TypeScript**: ^5.x
+- **Styling**: Tailwind CSS
+- **UI Components**: Shadcn UI
+- **State Management**: React Context / Hooks
+- **Backend (Mock/Firebase)**: Firebase SDK
+
 ## Getting Started
 
 Follow these steps to set up and run the web application locally.
@@ -16,6 +26,12 @@ npm install
 # or yarn install
 # or pnpm install
 # or bun install
+```
+
+**Shadcn UI Components**: After `npm install`, you may need to add Shadcn UI components if they are not already present (e.g., if starting from scratch). The installed components are located in `src/components/ui/`. You can add new components using:
+
+```bash
+npx shadcn@latest add <component-name> --yes
 ```
 
 ### 2. Environment Variables
