@@ -55,7 +55,7 @@ describe('Home Page', () => {
 
   it('renders the list of events when events exist', async () => {
     // Setup the mock return value
-    (EventService.getAllEvents as any).mockResolvedValue(mockEvents);
+    vi.mocked(EventService.getAllEvents).mockResolvedValue(mockEvents);
 
     // Render the async component
     // Note: React Testing Library does not strictly support async server components yet in the standard way for unit tests without some setup.
@@ -77,7 +77,7 @@ describe('Home Page', () => {
   });
 
   it('renders empty state when no events exist', async () => {
-    (EventService.getAllEvents as any).mockResolvedValue([]);
+    vi.mocked(EventService.getAllEvents).mockResolvedValue([]);
 
     const jsx = await Home();
     render(jsx);
@@ -86,7 +86,7 @@ describe('Home Page', () => {
   });
 
   it('calls EventService.getAllEvents', async () => {
-    (EventService.getAllEvents as any).mockResolvedValue([]);
+    vi.mocked(EventService.getAllEvents).mockResolvedValue([]);
     await Home();
     expect(EventService.getAllEvents).toHaveBeenCalled();
   });

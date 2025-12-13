@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { TransactionService } from '../transaction-service';
 import { TransactionSchema } from '../../features/transactions/schemas';
 import {
@@ -77,12 +77,12 @@ describe('TransactionService', () => {
   // Test getTransactionById
   describe('getTransactionById', () => {
     it('should return a transaction if found', async () => {
-      (getDoc as vi.Mock).mockResolvedValueOnce({
+      (getDoc as Mock).mockResolvedValueOnce({
         exists: () => true,
         data: () => ({ ...mockExpenseTransaction, id: undefined }),
         id: mockExpenseTransaction.id,
       });
-      (doc as vi.Mock).mockReturnValue({});
+      (doc as Mock).mockReturnValue({});
 
       const result = await service.getTransactionById(mockEventId, mockTransactionId);
       expect(result).toEqual(mockExpenseTransaction);
@@ -97,21 +97,21 @@ describe('TransactionService', () => {
     });
 
     it('should return null if transaction not found', async () => {
-      (getDoc as vi.Mock).mockResolvedValueOnce({
+      (getDoc as Mock).mockResolvedValueOnce({
         exists: () => false,
         data: () => undefined,
       });
-      (doc as vi.Mock).mockReturnValue({});
+      (doc as Mock).mockReturnValue({});
 
       const result = await service.getTransactionById(mockEventId, 'nonexistent');
       expect(result).toBeNull();
     });
 
     it('should throw an error if Firebase call fails', async () => {
-      (getDoc as vi.Mock).mockRejectedValueOnce(
+      (getDoc as Mock).mockRejectedValueOnce(
         new FirebaseError('permission-denied', 'Permission denied')
       );
-      (doc as vi.Mock).mockReturnValue({});
+      (doc as Mock).mockReturnValue({});
 
       await expect(service.getTransactionById(mockEventId, mockTransactionId)).rejects.toThrow(
         'Firebase Error: Permission denied'
@@ -119,8 +119,8 @@ describe('TransactionService', () => {
     });
 
     it('should throw a generic error if other error occurs', async () => {
-      (getDoc as vi.Mock).mockRejectedValueOnce(new Error('Generic error'));
-      (doc as vi.Mock).mockReturnValue({});
+      (getDoc as Mock).mockRejectedValueOnce(new Error('Generic error'));
+      (doc as Mock).mockReturnValue({});
 
       await expect(service.getTransactionById(mockEventId, mockTransactionId)).rejects.toThrow(
         'Failed to get transaction: Generic error'
@@ -141,8 +141,8 @@ describe('TransactionService', () => {
 
     it('should create a new expense transaction', async () => {
       const mockDocRef = { id: 'new-txn-id' };
-      (addDoc as vi.Mock).mockResolvedValueOnce(mockDocRef);
-      (collection as vi.Mock).mockReturnValue({});
+      (addDoc as Mock).mockResolvedValueOnce(mockDocRef);
+      (collection as Mock).mockReturnValue({});
 
       const result = await service.createExpenseTransaction(
         mockEventId,
@@ -174,10 +174,10 @@ describe('TransactionService', () => {
     });
 
     it('should throw an error if Firebase call fails', async () => {
-      (addDoc as vi.Mock).mockRejectedValueOnce(
+      (addDoc as Mock).mockRejectedValueOnce(
         new FirebaseError('permission-denied', 'Permission denied')
       );
-      (collection as vi.Mock).mockReturnValue({});
+      (collection as Mock).mockReturnValue({});
 
       await expect(
         service.createExpenseTransaction(mockEventId, newExpenseData, mockUserId)
@@ -185,8 +185,8 @@ describe('TransactionService', () => {
     });
 
     it('should throw a generic error if other error occurs', async () => {
-      (addDoc as vi.Mock).mockRejectedValueOnce(new Error('Generic error'));
-      (collection as vi.Mock).mockReturnValue({});
+      (addDoc as Mock).mockRejectedValueOnce(new Error('Generic error'));
+      (collection as Mock).mockReturnValue({});
 
       await expect(
         service.createExpenseTransaction(mockEventId, newExpenseData, mockUserId)
@@ -207,8 +207,8 @@ describe('TransactionService', () => {
 
     it('should create a new transfer transaction', async () => {
       const mockDocRef = { id: 'new-transfer-id' };
-      (addDoc as vi.Mock).mockResolvedValueOnce(mockDocRef);
-      (collection as vi.Mock).mockReturnValue({});
+      (addDoc as Mock).mockResolvedValueOnce(mockDocRef);
+      (collection as Mock).mockReturnValue({});
 
       const result = await service.createTransferTransaction(
         mockEventId,
@@ -240,10 +240,10 @@ describe('TransactionService', () => {
     });
 
     it('should throw an error if Firebase call fails', async () => {
-      (addDoc as vi.Mock).mockRejectedValueOnce(
+      (addDoc as Mock).mockRejectedValueOnce(
         new FirebaseError('permission-denied', 'Permission denied')
       );
-      (collection as vi.Mock).mockReturnValue({});
+      (collection as Mock).mockReturnValue({});
 
       await expect(
         service.createTransferTransaction(mockEventId, newTransferData, mockUserId)
@@ -251,8 +251,8 @@ describe('TransactionService', () => {
     });
 
     it('should throw a generic error if other error occurs', async () => {
-      (addDoc as vi.Mock).mockRejectedValueOnce(new Error('Generic error'));
-      (collection as vi.Mock).mockReturnValue({});
+      (addDoc as Mock).mockRejectedValueOnce(new Error('Generic error'));
+      (collection as Mock).mockReturnValue({});
 
       await expect(
         service.createTransferTransaction(mockEventId, newTransferData, mockUserId)
@@ -263,8 +263,8 @@ describe('TransactionService', () => {
   // Test updateTransaction
   describe('updateTransaction', () => {
     it('should update an existing transaction', async () => {
-      (updateDoc as vi.Mock).mockResolvedValueOnce(undefined);
-      (doc as vi.Mock).mockReturnValue({});
+      (updateDoc as Mock).mockResolvedValueOnce(undefined);
+      (doc as Mock).mockReturnValue({});
 
       const updateData = { title: 'Updated Title' };
       await service.updateTransaction(mockEventId, mockTransactionId, updateData);
@@ -279,10 +279,10 @@ describe('TransactionService', () => {
     });
 
     it('should throw an error if Firebase call fails', async () => {
-      (updateDoc as vi.Mock).mockRejectedValueOnce(
+      (updateDoc as Mock).mockRejectedValueOnce(
         new FirebaseError('permission-denied', 'Permission denied')
       );
-      (doc as vi.Mock).mockReturnValue({});
+      (doc as Mock).mockReturnValue({});
 
       await expect(service.updateTransaction(mockEventId, mockTransactionId, {})).rejects.toThrow(
         'Firebase Error: Permission denied'
@@ -290,8 +290,8 @@ describe('TransactionService', () => {
     });
 
     it('should throw a generic error if other error occurs', async () => {
-      (updateDoc as vi.Mock).mockRejectedValueOnce(new Error('Generic error'));
-      (doc as vi.Mock).mockReturnValue({});
+      (updateDoc as Mock).mockRejectedValueOnce(new Error('Generic error'));
+      (doc as Mock).mockReturnValue({});
 
       await expect(service.updateTransaction(mockEventId, mockTransactionId, {})).rejects.toThrow(
         'Failed to update transaction: Generic error'
@@ -302,8 +302,8 @@ describe('TransactionService', () => {
   // Test deleteTransaction
   describe('deleteTransaction', () => {
     it('should delete a transaction', async () => {
-      (deleteDoc as vi.Mock).mockResolvedValueOnce(undefined);
-      (doc as vi.Mock).mockReturnValue({});
+      (deleteDoc as Mock).mockResolvedValueOnce(undefined);
+      (doc as Mock).mockReturnValue({});
 
       await service.deleteTransaction(mockEventId, mockTransactionId);
 
@@ -318,10 +318,10 @@ describe('TransactionService', () => {
     });
 
     it('should throw an error if Firebase call fails', async () => {
-      (deleteDoc as vi.Mock).mockRejectedValueOnce(
+      (deleteDoc as Mock).mockRejectedValueOnce(
         new FirebaseError('permission-denied', 'Permission denied')
       );
-      (doc as vi.Mock).mockReturnValue({});
+      (doc as Mock).mockReturnValue({});
 
       await expect(service.deleteTransaction(mockEventId, mockTransactionId)).rejects.toThrow(
         'Firebase Error: Permission denied'
@@ -329,8 +329,8 @@ describe('TransactionService', () => {
     });
 
     it('should throw a generic error if other error occurs', async () => {
-      (deleteDoc as vi.Mock).mockRejectedValueOnce(new Error('Generic error'));
-      (doc as vi.Mock).mockReturnValue({});
+      (deleteDoc as Mock).mockRejectedValueOnce(new Error('Generic error'));
+      (doc as Mock).mockReturnValue({});
 
       await expect(service.deleteTransaction(mockEventId, mockTransactionId)).rejects.toThrow(
         'Failed to delete transaction: Generic error'
@@ -341,7 +341,7 @@ describe('TransactionService', () => {
   // Test getTransactionsByEventId
   describe('getTransactionsByEventId', () => {
     it('should return all transactions for an event', async () => {
-      (getDocs as vi.Mock).mockResolvedValueOnce({
+      (getDocs as Mock).mockResolvedValueOnce({
         forEach: (callback: (docSnap: { data: () => unknown; id: string }) => void) => {
           // Explicitly typed callback
           callback({
@@ -354,7 +354,7 @@ describe('TransactionService', () => {
           });
         },
       });
-      (collection as vi.Mock).mockReturnValue({});
+      (collection as Mock).mockReturnValue({});
 
       const result = await service.getTransactionsByEventId(mockEventId);
 
@@ -367,10 +367,10 @@ describe('TransactionService', () => {
     });
 
     it('should throw an error if Firebase call fails', async () => {
-      (getDocs as vi.Mock).mockRejectedValueOnce(
+      (getDocs as Mock).mockRejectedValueOnce(
         new FirebaseError('permission-denied', 'Permission denied')
       );
-      (collection as vi.Mock).mockReturnValue({});
+      (collection as Mock).mockReturnValue({});
 
       await expect(service.getTransactionsByEventId(mockEventId)).rejects.toThrow(
         'Firebase Error: Permission denied'
@@ -378,8 +378,8 @@ describe('TransactionService', () => {
     });
 
     it('should throw a generic error if other error occurs', async () => {
-      (getDocs as vi.Mock).mockRejectedValueOnce(new Error('Generic error'));
-      (collection as vi.Mock).mockReturnValue({});
+      (getDocs as Mock).mockRejectedValueOnce(new Error('Generic error'));
+      (collection as Mock).mockReturnValue({});
 
       await expect(service.getTransactionsByEventId(mockEventId)).rejects.toThrow(
         'Failed to get transactions by event ID: Generic error'
