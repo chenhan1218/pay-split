@@ -57,10 +57,8 @@ const mockCreateEventData = {
 };
 
 describe('EventService', () => {
-  let service: EventService;
 
   beforeEach(() => {
-    service = new EventService();
     vi.clearAllMocks(); // Clear mocks before each test
   });
 
@@ -75,7 +73,7 @@ describe('EventService', () => {
       });
       (doc as vi.Mock).mockReturnValue({}); // Mock doc function return value
 
-      const result = await service.getEventById(mockEvent.id);
+      const result = await EventService.getEventById(mockEvent.id);
       expect(result).toEqual(mockEvent);
       expect(getDoc).toHaveBeenCalledWith({});
       expect(doc).toHaveBeenCalledWith({}, 'events', mockEvent.id);
@@ -90,7 +88,7 @@ describe('EventService', () => {
       });
       (doc as vi.Mock).mockReturnValue({});
 
-      const result = await service.getEventById('nonexistent-id');
+      const result = await EventService.getEventById('nonexistent-id');
       expect(result).toBeNull();
     });
 
@@ -99,7 +97,42 @@ describe('EventService', () => {
       (getDoc as vi.Mock).mockRejectedValueOnce(firebaseError);
       (doc as vi.Mock).mockReturnValue({});
 
-      await expect(service.getEventById(mockEvent.id)).rejects.toThrow('Failed to get event');
+      await expect(EventService.getEventById(mockEvent.id)).rejects.toThrow('Failed to get event');
+    });
+  });
+
+  // Test getAllEvents
+  describe('getAllEvents', () => {
+    it('should return all events', async () => {
+      (getDocs as vi.Mock).mockResolvedValueOnce({
+        forEach: (docSnapCallback: (docSnap: { data: () => unknown; id: string }) => void) => {
+          docSnapCallback({
+            data: () => ({ ...mockEvent, id: undefined }),
+            id: mockEvent.id,
+          });
+        },
+      });
+      (collection as vi.Mock).mockReturnValue({});
+      (query as vi.Mock).mockReturnValue({});
+      (orderBy as vi.Mock).mockReturnValue({});
+
+      const result = await EventService.getAllEvents();
+
+      expect(result).toEqual([mockEvent]);
+      expect(getDocs).toHaveBeenCalledWith({});
+      expect(query).toHaveBeenCalledWith({}, expect.anything());
+      expect(orderBy).toHaveBeenCalledWith('updatedAt', 'desc');
+      EventSchema.parse(result[0]); // Ensure Zod validation passes
+    });
+
+    it('should throw an error if Firebase call fails', async () => {
+      const firebaseError = new Error('Firebase query error');
+      (getDocs as vi.Mock).mockRejectedValueOnce(firebaseError);
+      (collection as vi.Mock).mockReturnValue({});
+      (query as vi.Mock).mockReturnValue({});
+      (orderBy as vi.Mock).mockReturnValue({});
+
+      await expect(EventService.getAllEvents()).rejects.toThrow('Failed to get all events');
     });
   });
 
@@ -111,7 +144,7 @@ describe('EventService', () => {
       (collection as vi.Mock).mockReturnValue({}); // Mock collection reference
       (doc as vi.Mock).mockReturnValue({ id: 'mock-participant-id' }); // Mock for participant ID generation
 
-      const result = await service.createEvent(mockCreateEventData, 'creator123');
+      const result = await EventService.createEvent(mockCreateEventData, 'creator123');
 
       expect(addDoc).toHaveBeenCalledWith(
         {},
@@ -156,7 +189,7 @@ describe('EventService', () => {
 
     it('should throw an error if Zod validation fails for newEventData', async () => {
       const invalidData = { ...mockCreateEventData, name: '' }; // Invalid name
-      await expect(service.createEvent(invalidData, 'creator123')).rejects.toThrow(
+      await expect(EventService.createEvent(invalidData, 'creator123')).rejects.toThrow(
         /Event name cannot be empty/
       );
     });
@@ -167,7 +200,7 @@ describe('EventService', () => {
       (collection as vi.Mock).mockReturnValue({});
       (doc as vi.Mock).mockReturnValue({ id: 'mock-participant-id' });
 
-      await expect(service.createEvent(mockCreateEventData, 'creator123')).rejects.toThrow(
+      await expect(EventService.createEvent(mockCreateEventData, 'creator123')).rejects.toThrow(
         'Failed to create event'
       );
     });
@@ -180,7 +213,7 @@ describe('EventService', () => {
       (doc as vi.Mock).mockReturnValue({});
 
       const updateData = { name: 'Updated Event Name' };
-      await service.updateEvent(mockEvent.id, updateData);
+      await EventService.updateEvent(mockEvent.id, updateData);
 
       expect(updateDoc).toHaveBeenCalledWith(
         {},
@@ -194,7 +227,7 @@ describe('EventService', () => {
 
     it('should throw an error if Zod validation fails for updateData', async () => {
       const invalidUpdateData = { currency: 'INVALID' }; // Invalid currency length
-      await expect(service.updateEvent(mockEvent.id, invalidUpdateData)).rejects.toThrow(
+      await expect(EventService.updateEvent(mockEvent.id, invalidUpdateData)).rejects.toThrow(
         /Currency must be a 3-letter ISO code/
       );
     });
@@ -205,7 +238,7 @@ describe('EventService', () => {
       (doc as vi.Mock).mockReturnValue({});
 
       const updateData = { name: 'Updated Event Name' };
-      await expect(service.updateEvent(mockEvent.id, updateData)).rejects.toThrow(
+      await expect(EventService.updateEvent(mockEvent.id, updateData)).rejects.toThrow(
         'Failed to update event'
       );
     });
@@ -217,7 +250,7 @@ describe('EventService', () => {
       (updateDoc as vi.Mock).mockResolvedValueOnce(undefined);
       (doc as vi.Mock).mockReturnValue({});
 
-      await service.archiveEvent(mockEvent.id);
+      await EventService.archiveEvent(mockEvent.id);
 
       expect(updateDoc).toHaveBeenCalledWith(
         {},
@@ -236,7 +269,7 @@ describe('EventService', () => {
       (deleteDoc as vi.Mock).mockResolvedValueOnce(undefined);
       (doc as vi.Mock).mockReturnValue({});
 
-      await service.deleteEvent(mockEvent.id);
+      await EventService.deleteEvent(mockEvent.id);
 
       expect(deleteDoc).toHaveBeenCalledWith({});
       expect(doc).toHaveBeenCalledWith({}, 'events', mockEvent.id);
@@ -247,7 +280,7 @@ describe('EventService', () => {
       (deleteDoc as vi.Mock).mockRejectedValueOnce(firebaseError);
       (doc as vi.Mock).mockReturnValue({});
 
-      await expect(service.deleteEvent(mockEvent.id)).rejects.toThrow('Failed to delete event');
+      await expect(EventService.deleteEvent(mockEvent.id)).rejects.toThrow('Failed to delete event');
     });
   });
 
@@ -267,7 +300,7 @@ describe('EventService', () => {
       (where as vi.Mock).mockReturnValue({});
       (orderBy as vi.Mock).mockReturnValue({});
 
-      const result = await service.getEventsByUserId('user123');
+      const result = await EventService.getEventsByUserId('user123');
 
       expect(result).toEqual([mockEvent]);
       expect(getDocs).toHaveBeenCalledWith({});
@@ -288,7 +321,7 @@ describe('EventService', () => {
       (where as vi.Mock).mockReturnValue({});
       (orderBy as vi.Mock).mockReturnValue({});
 
-      const result = await service.getEventsByUserId('nonexistent-user');
+      const result = await EventService.getEventsByUserId('nonexistent-user');
       expect(result).toEqual([]);
     });
 
@@ -300,7 +333,7 @@ describe('EventService', () => {
       (where as vi.Mock).mockReturnValue({});
       (orderBy as vi.Mock).mockReturnValue({});
 
-      await expect(service.getEventsByUserId('user123')).rejects.toThrow(
+      await expect(EventService.getEventsByUserId('user123')).rejects.toThrow(
         'Failed to get events by user ID'
       );
     });
@@ -322,7 +355,7 @@ describe('EventService', () => {
       (where as vi.Mock).mockReturnValue({});
       (orderBy as vi.Mock).mockReturnValue({});
 
-      const result = await service.getEventsByOwnerId('user123');
+      const result = await EventService.getEventsByOwnerId('user123');
 
       expect(result).toEqual([mockEvent]);
       expect(getDocs).toHaveBeenCalledWith({});
@@ -341,7 +374,7 @@ describe('EventService', () => {
       (where as vi.Mock).mockReturnValue({});
       (orderBy as vi.Mock).mockReturnValue({});
 
-      const result = await service.getEventsByOwnerId('nonexistent-owner');
+      const result = await EventService.getEventsByOwnerId('nonexistent-owner');
       expect(result).toEqual([]);
     });
 
@@ -353,7 +386,7 @@ describe('EventService', () => {
       (where as vi.Mock).mockReturnValue({});
       (orderBy as vi.Mock).mockReturnValue({});
 
-      await expect(service.getEventsByOwnerId('user123')).rejects.toThrow(
+      await expect(EventService.getEventsByOwnerId('user123')).rejects.toThrow(
         'Failed to get events by owner ID'
       );
     });
