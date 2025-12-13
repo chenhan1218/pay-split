@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import EventDetailPage from '../page';
 import { EventService } from '@/services/event-service';
@@ -54,7 +54,7 @@ describe('EventDetailPage', () => {
     ownerId: 'owner-1',
     createdAt: Date.now(),
     updatedAt: Date.now(),
-    status: 'active',
+    status: 'active' as const,
   };
 
   const mockTransactions = [
@@ -88,8 +88,8 @@ describe('EventDetailPage', () => {
   });
 
   it('renders event details and transactions correctly', async () => {
-    (EventService.getEventById as vi.Mock).mockResolvedValue(mockEvent);
-    (TransactionService.getTransactionsByEventId as vi.Mock).mockResolvedValue(mockTransactions);
+    (EventService.getEventById as Mock).mockResolvedValue(mockEvent);
+    (TransactionService.getTransactionsByEventId as Mock).mockResolvedValue(mockTransactions);
 
     const jsx = await EventDetailPage({ params });
     render(jsx);
@@ -113,8 +113,8 @@ describe('EventDetailPage', () => {
   });
 
   it('renders "No transactions" message when there are no transactions', async () => {
-    (EventService.getEventById as vi.Mock).mockResolvedValue(mockEvent);
-    (TransactionService.getTransactionsByEventId as vi.Mock).mockResolvedValue([]);
+    (EventService.getEventById as Mock).mockResolvedValue(mockEvent);
+    (TransactionService.getTransactionsByEventId as Mock).mockResolvedValue([]);
 
     const jsx = await EventDetailPage({ params });
     render(jsx);
@@ -123,8 +123,8 @@ describe('EventDetailPage', () => {
   });
 
   it('calls notFound when event is not found', async () => {
-    (EventService.getEventById as vi.Mock).mockResolvedValue(null);
-    (TransactionService.getTransactionsByEventId as vi.Mock).mockResolvedValue([]);
+    (EventService.getEventById as Mock).mockResolvedValue(null);
+    (TransactionService.getTransactionsByEventId as Mock).mockResolvedValue([]);
 
     const result = await EventDetailPage({ params });
 

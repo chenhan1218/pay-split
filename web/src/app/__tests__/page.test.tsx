@@ -35,7 +35,7 @@ describe('Home Page', () => {
       currency: 'USD',
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      status: 'active',
+      status: 'active' as const,
       ownerId: 'owner1',
     },
     {
@@ -45,7 +45,7 @@ describe('Home Page', () => {
       currency: 'EUR',
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      status: 'active',
+      status: 'active' as const,
       ownerId: 'owner1',
     },
   ];
