@@ -8,7 +8,6 @@
 
 我們已決定捨棄舊的 MVP 代碼，採用全新的技術堆疊重新初始化。
 
-- [x] **Archive**: 將舊專案 `web/` 移動至 `web-legacy/` (備份參考用)。
 - [x] **Establish Root-level Tooling (Monorepo)**: 統一管理專案開發工具。
   - [x] 在專案根目錄 `/` 初始化 `package.json`。
   - [x] 安裝 `husky`, `lint-staged`, `prettier`, `prettier-plugin-tailwindcss` 至根目錄。
