@@ -21,6 +21,9 @@ export default async function EventDetailPage(props: EventDetailPageProps) {
 
   if (!event) {
     notFound();
+    // Use return here to stop execution and satisfy TypeScript's flow analysis
+    // although notFound() typically throws.
+    return null;
   }
 
   const getParticipantName = (id: string) => {
