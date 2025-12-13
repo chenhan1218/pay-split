@@ -48,16 +48,16 @@ const formSchema = z.object({
   title: z.string().min(2, {
     message: 'Title must be at least 2 characters.',
   }),
-  amount: z.coerce.number().min(0.01, {
+  amount: z.number().min(0.01, {
     message: 'Amount must be greater than 0.',
   }),
   date: z.date({
-    required_error: 'A transaction date is required.',
+    message: 'A transaction date is required.',
   }),
   note: z.string().optional(),
   // Expense specific fields
-  paidBy: z.record(z.string(), z.coerce.number()).optional(),
-  splitDetails: z.record(z.string(), z.coerce.number()).optional(),
+  paidBy: z.record(z.string(), z.number()).optional(),
+  splitDetails: z.record(z.string(), z.number()).optional(),
   // Transfer specific fields
   fromId: z.string().optional(),
   toId: z.string().optional(),
@@ -98,35 +98,53 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
 
   const onSubmit = async (values: FormValues) => {
     try {
-      const transactionToCreate: Omit<Transaction, 'id' | 'createdAt' | 'updatedAt' | 'createdBy'> =
-        {
-          eventId,
-          title: values.title,
-          amount: values.amount,
-          date: values.date.getTime(),
-          note: values.note,
-          type: values.type,
-        };
+      const tempOwnerId = 'temp-owner-id'; // Using temp ID as per instruction/current state
 
       if (values.type === 'EXPENSE') {
-        // For simplicity, let's assume one person pays and it's split equally among all participants
-        const defaultPayerId = eventParticipants[0]?.id; // First participant pays
-        transactionToCreate.paidBy = { [defaultPayerId]: values.amount };
-
+        const defaultPayerId = eventParticipants[0]?.id;
+        const paidBy = { [defaultPayerId]: values.amount };
         const splitAmount = values.amount / eventParticipants.length;
-        transactionToCreate.splitDetails = eventParticipants.reduce(
+        const splitDetails = eventParticipants.reduce(
           (acc, p) => {
             acc[p.id] = splitAmount;
             return acc;
           },
           {} as Record<string, number>
         );
+
+        await TransactionService.createExpenseTransaction(
+          eventId,
+          {
+            title: values.title,
+            amount: values.amount,
+            date: values.date.getTime(),
+            note: values.note,
+            paidBy,
+            splitDetails,
+            type: 'EXPENSE',
+          },
+          tempOwnerId
+        );
       } else if (values.type === 'TRANSFER') {
-        transactionToCreate.fromId = values.fromId;
-        transactionToCreate.toId = values.toId;
+        if (!values.fromId || !values.toId) {
+           toast.error('From and To fields are required for transfer');
+           return;
+        }
+        await TransactionService.createTransferTransaction(
+          eventId,
+          {
+            title: values.title,
+            amount: values.amount,
+            date: values.date.getTime(),
+            note: values.note,
+            fromId: values.fromId,
+            toId: values.toId,
+            type: 'TRANSFER',
+          },
+          tempOwnerId
+        );
       }
 
-      await TransactionService.createTransaction(transactionToCreate);
       toast.success('Transaction added successfully!');
       setOpen(false); // Close dialog on success
       form.reset(); // Reset form fields
@@ -152,7 +170,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
             <FormField
-              control={form.control}
+              control={form.control as any}
               name="type"
               render={({ field }) => (
                 <FormItem className="space-y-3">
@@ -187,7 +205,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
             />
 
             <FormField
-              control={form.control}
+              control={form.control as any}
               name="title"
               render={({ field }) => (
                 <FormItem>
@@ -201,14 +219,20 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
             />
 
             <FormField
-              control={form.control}
+              control={form.control as any}
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount ({eventParticipants[0]?.currency || 'TWD'})</FormLabel>{' '}
-                  {/* Use event currency */}
+                  <FormLabel>Amount</FormLabel>{' '}
+                  {/* Currency should be passed as prop if needed, or derived from event context. Removed invalid access for now */}
                   <FormControl>
-                    <Input type="number" step="0.01" {...field} />
+                    <Input
+                      type="number"
+                      step="0.01"
+                      placeholder="0.00"
+                      {...field}
+                      onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -216,7 +240,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
             />
 
             <FormField
-              control={form.control}
+              control={form.control as any}
               name="date"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
@@ -263,7 +287,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
             {transactionType === 'TRANSFER' && (
               <>
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name="fromId"
                   render={({ field }) => (
                     <FormItem>
@@ -287,7 +311,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
                   )}
                 />
                 <FormField
-                  control={form.control}
+                  control={form.control as any}
                   name="toId"
                   render={({ field }) => (
                     <FormItem>
@@ -314,7 +338,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
             )}
 
             <FormField
-              control={form.control}
+              control={form.control as any}
               name="note"
               render={({ field }) => (
                 <FormItem>

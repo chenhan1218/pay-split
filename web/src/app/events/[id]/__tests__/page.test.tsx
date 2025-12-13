@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import EventDetailPage from '../page';
 import { EventService } from '@/services/event-service';
 import { TransactionService } from '@/services/transaction-service';
+import { Event } from '@/features/events/schemas';
 import { notFound } from 'next/navigation';
 import { format } from 'date-fns';
 
@@ -30,7 +31,7 @@ vi.mock('@/components/add-transaction-dialog', () => ({
 }));
 
 describe('EventDetailPage', () => {
-  const mockEvent = {
+  const mockEvent: Event = {
     id: 'event-1',
     name: 'Test Event',
     currency: 'USD',
@@ -75,8 +76,8 @@ describe('EventDetailPage', () => {
   });
 
   it('renders event details and transactions correctly', async () => {
-    (EventService.getEventById as vi.Mock).mockResolvedValue(mockEvent);
-    (TransactionService.getTransactionsByEventId as vi.Mock).mockResolvedValue(mockTransactions);
+    (EventService.getEventById as Mock).mockResolvedValue(mockEvent);
+    (TransactionService.getTransactionsByEventId as Mock).mockResolvedValue(mockTransactions);
 
     const jsx = await EventDetailPage({ params });
     render(jsx);
@@ -100,8 +101,8 @@ describe('EventDetailPage', () => {
   });
 
   it('renders "No transactions" message when there are no transactions', async () => {
-    (EventService.getEventById as vi.Mock).mockResolvedValue(mockEvent);
-    (TransactionService.getTransactionsByEventId as vi.Mock).mockResolvedValue([]);
+    (EventService.getEventById as Mock).mockResolvedValue(mockEvent);
+    (TransactionService.getTransactionsByEventId as Mock).mockResolvedValue([]);
 
     const jsx = await EventDetailPage({ params });
     render(jsx);
@@ -110,8 +111,8 @@ describe('EventDetailPage', () => {
   });
 
   it('calls notFound when event is not found', async () => {
-    (EventService.getEventById as vi.Mock).mockResolvedValue(null);
-    (TransactionService.getTransactionsByEventId as vi.Mock).mockResolvedValue([]);
+    (EventService.getEventById as Mock).mockResolvedValue(null);
+    (TransactionService.getTransactionsByEventId as Mock).mockResolvedValue([]);
 
     const jsx = await EventDetailPage({ params });
     render(jsx);

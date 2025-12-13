@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import Home from '../page';
 import { EventService } from '@/services/event-service';
+import { Event } from '@/features/events/schemas';
 
 // Mock the EventService
 vi.mock('@/services/event-service', () => ({
@@ -27,13 +28,13 @@ vi.mock('next/link', () => ({
 // However, Card components are imported. If they are just divs, it's fine.
 
 describe('Home Page', () => {
-  const mockEvents = [
+  const mockEvents: Event[] = [
     {
       id: 'event1',
       name: 'Test Event 1',
       participants: [
-        { id: 'p1', name: 'User 1' },
-        { id: 'p2', name: 'User 2' },
+        { id: 'p1', name: 'User 1', linkedUserId: null, avatarUrl: null },
+        { id: 'p2', name: 'User 2', linkedUserId: null, avatarUrl: null },
       ],
       currency: 'USD',
       createdAt: Date.now(),
@@ -44,7 +45,7 @@ describe('Home Page', () => {
     {
       id: 'event2',
       name: 'Test Event 2',
-      participants: [{ id: 'p3', name: 'User 3' }],
+      participants: [{ id: 'p3', name: 'User 3', linkedUserId: null, avatarUrl: null }],
       currency: 'EUR',
       createdAt: Date.now(),
       updatedAt: Date.now(),
