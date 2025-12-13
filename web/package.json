@@ -9,7 +9,6 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepare": "husky",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {

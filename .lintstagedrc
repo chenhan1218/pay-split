@@ -1,8 +1,4 @@
 {
-  "**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-    "prettier --write"
-  ],
-  "web/**/*.{js,jsx,ts,tsx}": [
-    "bash -c 'cd web && npm run lint --'"
-  ]
+  "**/*.{js,jsx,ts,tsx,json,css,scss,md}": ["prettier --write"],
+  "web/**/*.{js,jsx,ts,tsx}": ["bash -c 'cd web && npm run lint --'"]
 }

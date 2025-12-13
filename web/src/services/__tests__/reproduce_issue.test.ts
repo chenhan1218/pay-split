@@ -42,8 +42,8 @@ describe('Reproduction of Issue', () => {
 
   it('should throw a clear error when eventId is undefined passed to getEventById', async () => {
     // We expect this to fail with a clear error message now
-    await expect(EventService.getEventById(undefined as unknown as string))
-      .rejects
-      .toThrow("Failed to get event: Event ID is required to get an event.");
+    await expect(EventService.getEventById(undefined as unknown as string)).rejects.toThrow(
+      'Failed to get event: Event ID is required to get an event.'
+    );
   });
 });

@@ -31,7 +31,10 @@ describe('Home Page', () => {
     {
       id: 'event1',
       name: 'Test Event 1',
-      participants: [{ id: 'p1', name: 'User 1' }, { id: 'p2', name: 'User 2' }],
+      participants: [
+        { id: 'p1', name: 'User 1' },
+        { id: 'p2', name: 'User 2' },
+      ],
       currency: 'USD',
       createdAt: Date.now(),
       updatedAt: Date.now(),
