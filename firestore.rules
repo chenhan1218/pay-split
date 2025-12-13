@@ -1,0 +1,32 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check specific fields for size limits
+    function isUnderSizeLimit(text) {
+      return text is string && text.size() < 10000;
+    }
+
+    match /events/{eventId} {
+      // Allow everyone to read and delete
+      allow read, delete: if true;
+      
+      // Allow create/update if 'name' is under 10,000 chars
+      allow create, update: if isUnderSizeLimit(request.resource.data.name);
+
+      match /transactions/{transactionId} {
+        // Allow everyone to read and delete
+        allow read, delete: if true;
+        
+        // Allow create/update if 'title' is under 10,000 chars
+        // AND 'note' (if present) is under 10,000 chars
+        allow create, update: if isUnderSizeLimit(request.resource.data.title)
+                              && (
+                                !("note" in request.resource.data) || 
+                                isUnderSizeLimit(request.resource.data.note)
+                              );
+      }
+    }
+  }
+}
