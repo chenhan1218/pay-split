@@ -32,7 +32,10 @@ export class TransactionService {
    * @param transactionId The ID of the transaction.
    * @returns A Promise that resolves to the Transaction object, or null if not found.
    */
-  async getTransactionById(eventId: string, transactionId: string): Promise<Transaction | null> {
+  static async getTransactionById(
+    eventId: string,
+    transactionId: string
+  ): Promise<Transaction | null> {
     try {
       const transactionDocRef = doc(
         db,
@@ -72,7 +75,7 @@ export class TransactionService {
    * @param createdBy The ID of the user creating the transaction.
    * @returns A Promise that resolves to the newly created ExpenseTransaction object.
    */
-  async createExpenseTransaction(
+  static async createExpenseTransaction(
     eventId: string,
     newExpenseData: z.infer<typeof CreateExpenseTransactionSchema>,
     createdBy: string
@@ -114,7 +117,7 @@ export class TransactionService {
    * @param createdBy The ID of the user creating the transaction.
    * @returns A Promise that resolves to the newly created TransferTransaction object.
    */
-  async createTransferTransaction(
+  static async createTransferTransaction(
     eventId: string,
     newTransferData: z.infer<typeof CreateTransferTransactionSchema>,
     createdBy: string
@@ -156,7 +159,7 @@ export class TransactionService {
    * @param updateData The partial data to update the transaction with.
    * @returns A Promise that resolves when the update is complete.
    */
-  async updateTransaction(
+  static async updateTransaction(
     eventId: string,
     transactionId: string,
     updateData: Partial<Transaction>
@@ -194,7 +197,7 @@ export class TransactionService {
    * @param transactionId The ID of the transaction to delete.
    * @returns A Promise that resolves when the transaction is deleted.
    */
-  async deleteTransaction(eventId: string, transactionId: string): Promise<void> {
+  static async deleteTransaction(eventId: string, transactionId: string): Promise<void> {
     try {
       const transactionDocRef = doc(
         db,
@@ -220,7 +223,7 @@ export class TransactionService {
    * @param eventId The ID of the parent event.
    * @returns A Promise that resolves to an array of Transaction objects.
    */
-  async getTransactionsByEventId(eventId: string): Promise<Transaction[]> {
+  static async getTransactionsByEventId(eventId: string): Promise<Transaction[]> {
     try {
       const transactionsRef = collection(db, EVENTS_COLLECTION, eventId, TRANSACTIONS_COLLECTION);
       const q = query(transactionsRef, orderBy('createdAt', 'desc'));
