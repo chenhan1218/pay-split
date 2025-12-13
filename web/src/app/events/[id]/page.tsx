@@ -9,12 +9,13 @@ import { TransactionService } from '@/services/transaction-service';
 import { format } from 'date-fns';
 
 interface EventDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default async function EventDetailPage({ params }: EventDetailPageProps) {
+export default async function EventDetailPage(props: EventDetailPageProps) {
+  const params = await props.params;
   const event = await EventService.getEventById(params.id);
   const transactions = await TransactionService.getTransactionsByEventId(params.id);
 
