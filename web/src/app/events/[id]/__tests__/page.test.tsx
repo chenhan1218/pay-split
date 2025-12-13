@@ -1,11 +1,10 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import EventDetailPage from '../page';
 import { EventService } from '@/services/event-service';
 import { TransactionService } from '@/services/transaction-service';
 import { Event } from '@/features/events/schemas';
 import { notFound } from 'next/navigation';
-import { format } from 'date-fns';
 
 // Mock dependencies
 vi.mock('@/services/event-service');

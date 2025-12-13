@@ -37,7 +37,6 @@ import {
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Event } from '@/features/events/schemas';
-import { Transaction } from '@/features/transactions/schemas'; // Import Transaction types
 import { Textarea } from '@/components/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
@@ -170,6 +169,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 py-4">
             <FormField
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               control={form.control as any}
               name="type"
               render={({ field }) => (
@@ -205,6 +205,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
             />
 
             <FormField
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               control={form.control as any}
               name="title"
               render={({ field }) => (
@@ -219,6 +220,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
             />
 
             <FormField
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               control={form.control as any}
               name="amount"
               render={({ field }) => (
@@ -240,6 +242,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
             />
 
             <FormField
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               control={form.control as any}
               name="date"
               render={({ field }) => (
@@ -287,7 +290,8 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
             {transactionType === 'TRANSFER' && (
               <>
                 <FormField
-                  control={form.control as any}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              control={form.control as any}
                   name="fromId"
                   render={({ field }) => (
                     <FormItem>
@@ -311,7 +315,8 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
                   )}
                 />
                 <FormField
-                  control={form.control as any}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              control={form.control as any}
                   name="toId"
                   render={({ field }) => (
                     <FormItem>
@@ -338,6 +343,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
             )}
 
             <FormField
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               control={form.control as any}
               name="note"
               render={({ field }) => (
