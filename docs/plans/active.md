@@ -29,8 +29,12 @@
   - [x] 建立 `web/src/lib/firebase.ts` 初始化 Firebase App。
   - [x] 建立 `web/.env.example` 範本。
 - [x] **Document Environment Variables**: 更新 `web/README.md`，加入 Firebase 環境變數設定說明。
-- [ ] **Refine Core Data Model**: 更新 `docs/specs/core_data_model.md` 以支援更靈活的交易紀錄。
-  - [ ] 將 `Expense` 擴充為 `Transaction` (支援 `type: 'EXPENSE' | 'TRANSFER'`)。
-  - [ ] 明確定義基本欄位：`date` (交易時間), `note` (備註/描述)。
-  - [ ] 設計 `TRANSFER` (轉帳) 專用的欄位 (fromUser, toUser)。
-- [ ] **Migration**: 依照 `docs/specs/core_data_model.md` 逐步搬遷/重寫功能。
+- [x] **Refine Core Data Model**: 更新 `docs/specs/core_data_model.md` 以支援更靈活的交易紀錄。
+  - [x] 將 `Expense` 擴充為 `Transaction` (支援 `type: 'EXPENSE' | 'TRANSFER'`)。
+  - [x] 明確定義基本欄位：`date` (交易時間), `note` (備註/描述)。
+  - [x] 設計 `TRANSFER` (轉帳) 專用的欄位 (fromUser, toUser)。
+- [x] **Feature Implementation: Core Services**: 依照新的資料模型實作核心功能。
+  - [x] **Data Schemas**: 使用 Zod 定義 `Event` 與 `Transaction` 的驗證規則與型別。
+  - [x] **Event Service**: 實作 `Event` 的 CRUD 邏輯 (Firebase)。
+  - [x] **Transaction Service**: 實作 `Transaction` (Expense/Transfer) 的 CRUD 邏輯 (Firebase)。
+  - [x] **Service Testing**: 為上述服務撰寫單元測試 (Vitest)。

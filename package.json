@@ -13,6 +13,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "workspaces": [
+    "web"
+  ],
   "type": "commonjs",
   "devDependencies": {
     "husky": "^9.1.7",

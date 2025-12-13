@@ -65,30 +65,38 @@ interface Event {
 }
 ```
 
-## 2. Expense (消費紀錄)
+## 2. Transaction (交易紀錄)
 
-記錄在 Event 中發生的單筆交易。
+記錄在 Event 中發生的單筆交易，可以是消費 (Expense) 或參與者之間的轉帳 (Transfer)。
 
 ### 功能需求 (Functional Requirements)
 
-- 使用者可以在 Event 中新增一筆 Expense。
-- Expense 必須包含標題 (Title)、總金額 (Total Amount) 與日期 (Date)。
-- **支援多人付款 (Multi-Payer Support)**: 允許一位或多位參與者共同支付該筆消費，並指定各自支付的金額。
-- **彈性的分帳邏輯 (Flexible Split Logic)**:
-  - **平均分攤 (Split Equally)**: 將總金額平均分配給選定的受益人。
-  - **指定金額分攤 (Split by Exact Amount)**: 手動指定每位受益人應負擔的金額。
-- 使用者可以檢視 Event 內的所有 Expenses 列表。
+- 使用者可以在 Event 中新增一筆 Transaction (Expense 或 Transfer)。
+- Transaction 必須包含標題 (Title)、總金額 (Total Amount) 與日期 (Date)。
+- 使用者可以檢視 Event 內的所有 Transactions 列表。
 
-### 資料架構 (Firestore Sub-collection Document - `events/{eventId}/expenses/{expenseId}`)
+### 資料架構 (Firestore Sub-collection Document - `events/{eventId}/transactions/{transactionId}`)
 
 ```typescript
-interface Expense {
-  id: string; // Expense 的唯一識別碼
+type TransactionType = 'EXPENSE' | 'TRANSFER';
+
+interface BaseTransaction {
+  id: string; // Transaction 的唯一識別碼
   eventId: string; // 關聯至父層 Event 的 Foreign Key
-  title: string; // 消費描述 (e.g., "居酒屋晚餐")
-  amount: number; // 消費總金額
-  date: number; // 消費發生的時間戳記 (milliseconds)
-  category: string; // 選用：消費類別 (e.g., "Food", "Transportation")
+  title: string; // 交易描述 (e.g., "居酒屋晚餐", "Bob 給 Alice 1000 円")
+  amount: number; // 交易總金額
+  date: number; // 交易發生的時間戳記 (milliseconds)
+  type: TransactionType; // 交易類型
+  note?: string; // 選用：備註/詳細描述
+
+  createdBy: string; // 建立此 Transaction 的 User ID (用於未來權限控管)
+  createdAt: number; // 記錄建立的時間戳記 (milliseconds)
+  updatedAt: number; // 最後更新時間戳記 (milliseconds)
+}
+
+interface ExpenseTransaction extends BaseTransaction {
+  type: 'EXPENSE';
+  category?: string; // 選用：消費類別 (e.g., "Food", "Transportation")
 
   // 付款資訊：誰付了多少錢。
   // Key: Participant ID, Value: 該參與者支付的金額。
@@ -99,21 +107,29 @@ interface Expense {
   // Key: Participant ID, Value: 該參與者應負擔的金額。
   // Example (1000元兩人平分): { "part_alice_001": 500, "part_bob_002": 500 }
   splitDetails: { [participantId: string]: number };
-
-  createdBy: string; // 建立此 Expense 的 User ID (用於未來權限控管)
-  createdAt: number; // 記錄建立的時間戳記 (milliseconds)
 }
+
+interface TransferTransaction extends BaseTransaction {
+  type: 'TRANSFER';
+  fromId: string; // 轉出者 Participant ID
+  toId: string; // 接收者 Participant ID
+}
+
+type Transaction = ExpenseTransaction | TransferTransaction;
 ```
 
-### Firestore 文件範例 (`events/event_tokyo_001/expenses/exp_dinner_001`)
+### Firestore 文件範例 (`events/event_tokyo_001/transactions/txn_dinner_001`)
+
+**類型一：Expense (消費)**
 
 ```json
 {
-  "id": "exp_dinner_001",
+  "id": "txn_dinner_001",
   "eventId": "event_tokyo_001",
   "title": "居酒屋晚餐",
   "amount": 1500, // 總金額
   "date": 1702299600000, // Dec 11, 2025 19:00:00 GMT+8
+  "type": "EXPENSE",
   "category": "Food",
   "paidBy": {
     "part_alice_001": 1500 // Alice 全額支付
@@ -123,6 +139,26 @@ interface Expense {
     "part_bob_002": 750 // Bob 應負擔 750
   },
   "createdBy": "user_alice_123",
-  "createdAt": 1702299700000
+  "createdAt": 1702299700000,
+  "updatedAt": 1702299700000
+}
+```
+
+**類型二：Transfer (轉帳)**
+
+```json
+{
+  "id": "txn_transfer_001",
+  "eventId": "event_tokyo_001",
+  "title": "Bob 歸還 Alice 交通費",
+  "amount": 800,
+  "date": 1702386000000, // Dec 12, 2025 19:00:00 GMT+8
+  "type": "TRANSFER",
+  "fromId": "part_bob_002",
+  "toId": "part_alice_001",
+  "note": "上次地鐵錢，總算還了！",
+  "createdBy": "user_bob_456",
+  "createdAt": 1702386100000,
+  "updatedAt": 1702386100000
 }
 ```
