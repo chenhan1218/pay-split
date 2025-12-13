@@ -2,43 +2,43 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main', '**']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
-        cache-dependency-path: |
-          package-lock.json
-          web/package-lock.json
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            web/package-lock.json
 
-    - name: Install Root Dependencies
-      run: npm ci
+      - name: Install Root Dependencies
+        run: npm ci
 
-    - name: Install Web Dependencies
-      run: |
-        cd web
-        npm ci
+      - name: Install Web Dependencies
+        run: |
+          cd web
+          npm ci
 
-    - name: Check Formatting (Prettier)
-      run: npx prettier --check .
+      - name: Check Formatting (Prettier)
+        run: npx prettier --check .
 
-    - name: Lint Web
-      run: |
-        cd web
-        npm run lint
+      - name: Lint Web
+        run: |
+          cd web
+          npm run lint
 
-    - name: Test Web
-      run: |
-        cd web
-        npm run test -- run
+      - name: Test Web
+        run: |
+          cd web
+          npm run test -- run
