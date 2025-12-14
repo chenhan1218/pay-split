@@ -1,18 +1,18 @@
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import { EventService } from '../event-service';
-import { EventSchema } from '../../features/events/schemas';
 import {
+  addDoc,
+  collection,
+  deleteDoc,
   doc,
   getDoc,
-  collection,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
   getDocs,
   orderBy,
+  query,
+  updateDoc,
+  where,
 } from 'firebase/firestore';
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
+import { EventSchema } from '../../features/events/schemas';
+import { EventService } from '../event-service';
 
 // Mock Firebase Firestore functions
 vi.mock('firebase/firestore', () => ({

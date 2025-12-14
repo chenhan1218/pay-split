@@ -1,10 +1,9 @@
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import EventDetailPage from '../page';
+import { render, screen } from '@testing-library/react';
+import { notFound } from 'next/navigation';
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 import { EventService } from '@/services/event-service';
 import { TransactionService } from '@/services/transaction-service';
-import { notFound } from 'next/navigation';
-import { format } from 'date-fns';
+import EventDetailPage from '../page';
 
 // Mock dependencies
 vi.mock('@/services/event-service');
@@ -27,7 +26,7 @@ vi.mock('@/components/ui/separator', () => ({
 }));
 // Update mock path to the new location
 vi.mock('@/features/transactions/components/add-transaction-dialog', () => ({
-  AddTransactionDialog: () => <button>Add Transaction</button>,
+  AddTransactionDialog: () => <button type="button">Add Transaction</button>,
 }));
 
 // Mock config to avoid env validation error during tests

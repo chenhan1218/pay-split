@@ -1,30 +1,31 @@
-import { db } from '@/lib/firebase';
+import { FirebaseError } from 'firebase/app';
 import {
+  addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
-  addDoc,
-  updateDoc,
-  query,
   getDocs,
   orderBy,
-  deleteDoc,
+  query,
+  updateDoc,
 } from 'firebase/firestore';
+import type { z } from 'zod';
 import {
-  Transaction,
-  TransactionSchema,
   CreateExpenseTransactionSchema,
   CreateTransferTransactionSchema,
-  ExpenseTransaction,
-  TransferTransaction,
+  type ExpenseTransaction,
   ExpenseTransactionSchema,
+  type Transaction,
+  TransactionSchema,
+  type TransferTransaction,
   TransferTransactionSchema,
 } from '@/features/transactions/schemas';
-import { FirebaseError } from 'firebase/app';
-import { z } from 'zod';
+import { db } from '@/lib/firebase';
 
 const TRANSACTIONS_COLLECTION = 'transactions';
 
+// biome-ignore lint/complexity/noStaticOnlyClass: keeping this structure for now
 export class TransactionService {
   /**
    * Retrieves a Transaction by its ID within a specific event.

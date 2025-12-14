@@ -1,12 +1,12 @@
-import { EventService } from '@/services/event-service';
+import { format } from 'date-fns';
+import { ArrowRightLeftIcon, ReceiptTextIcon } from 'lucide-react';
 import { notFound } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { AddTransactionDialog } from '@/features/transactions/components/add-transaction-dialog';
+import { EventService } from '@/services/event-service';
 import { TransactionService } from '@/services/transaction-service';
-import { format } from 'date-fns';
-import { ReceiptTextIcon, ArrowRightLeftIcon } from 'lucide-react';
 
 interface EventDetailPageProps {
   params: Promise<{
@@ -83,7 +83,9 @@ export default async function EventDetailPage(props: EventDetailPageProps) {
                       <Card key={txn.id} className="overflow-hidden">
                         <div className="p-4 sm:flex sm:items-start sm:justify-between">
                           <div className="flex items-start gap-3">
-                            <div className={`rounded-full p-2 ${txn.type === 'EXPENSE' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'}`}>
+                            <div
+                              className={`rounded-full p-2 ${txn.type === 'EXPENSE' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'}`}
+                            >
                               {txn.type === 'EXPENSE' ? (
                                 <ReceiptTextIcon className="h-4 w-4" />
                               ) : (
@@ -111,7 +113,8 @@ export default async function EventDetailPage(props: EventDetailPageProps) {
                                   </span>
                                   {' • '}
                                   Split by{' '}
-                                  {Object.keys(txn.splitDetails || {}).length === event.participants.length
+                                  {Object.keys(txn.splitDetails || {}).length ===
+                                  event.participants.length
                                     ? 'everyone'
                                     : `${Object.keys(txn.splitDetails || {}).length} people`}
                                 </div>
@@ -119,13 +122,17 @@ export default async function EventDetailPage(props: EventDetailPageProps) {
 
                               {txn.type === 'TRANSFER' && (
                                 <div className="mt-1 text-sm text-muted-foreground">
-                                  <span className="font-medium text-foreground">{getParticipantName(txn.fromId)}</span>
+                                  <span className="font-medium text-foreground">
+                                    {getParticipantName(txn.fromId)}
+                                  </span>
                                   {' sent '}
                                   <span className="font-medium text-foreground">
                                     {event.currency} {txn.amount.toFixed(2)}
                                   </span>
                                   {' to '}
-                                  <span className="font-medium text-foreground">{getParticipantName(txn.toId)}</span>
+                                  <span className="font-medium text-foreground">
+                                    {getParticipantName(txn.toId)}
+                                  </span>
                                 </div>
                               )}
 
@@ -138,8 +145,11 @@ export default async function EventDetailPage(props: EventDetailPageProps) {
                           </div>
 
                           <div className="mt-2 text-right sm:mt-0">
-                            <span className={`text-lg font-bold ${txn.type === 'EXPENSE' ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400'}`}>
-                              {txn.type === 'EXPENSE' ? '-' : ''}{event.currency} {txn.amount.toFixed(2)}
+                            <span
+                              className={`text-lg font-bold ${txn.type === 'EXPENSE' ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400'}`}
+                            >
+                              {txn.type === 'EXPENSE' ? '-' : ''}
+                              {event.currency} {txn.amount.toFixed(2)}
                             </span>
                           </div>
                         </div>

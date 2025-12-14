@@ -1,12 +1,15 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
+import { CalendarIcon, PlusIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import * as z from 'zod';
-import { PlusIcon, CalendarIcon } from 'lucide-react';
-
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -25,9 +28,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import { TransactionService } from '@/services/transaction-service';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import {
   Select,
   SelectContent,
@@ -35,14 +37,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Event } from '@/features/events/schemas';
-import { Transaction } from '@/features/transactions/schemas';
 import { Textarea } from '@/components/ui/textarea';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { format } from 'date-fns';
-import { Checkbox } from '@/components/ui/checkbox';
+import type { Event } from '@/features/events/schemas';
+import { cn } from '@/lib/utils';
+import { TransactionService } from '@/services/transaction-service';
 
 const formSchema = z.object({
   type: z.enum(['EXPENSE', 'TRANSFER']),
@@ -203,7 +201,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
             <FormField
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              // biome-ignore lint/suspicious/noExplicitAny: control types are complex with union types in hook form
               control={form.control as any}
               name="type"
               render={({ field }) => (
@@ -236,7 +234,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
 
             <div className="grid grid-cols-2 gap-4">
               <FormField
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // biome-ignore lint/suspicious/noExplicitAny: control types are complex with union types in hook form
                 control={form.control as any}
                 name="title"
                 render={({ field }) => (
@@ -251,7 +249,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
               />
 
               <FormField
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // biome-ignore lint/suspicious/noExplicitAny: control types are complex with union types in hook form
                 control={form.control as any}
                 name="amount"
                 render={({ field }) => (
@@ -271,7 +269,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
               />
 
               <FormField
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // biome-ignore lint/suspicious/noExplicitAny: control types are complex with union types in hook form
                 control={form.control as any}
                 name="date"
                 render={({ field }) => (
@@ -310,7 +308,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
             {transactionType === 'EXPENSE' && (
               <div className="space-y-4 rounded-md border p-4 bg-muted/50">
                 <FormField
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  // biome-ignore lint/suspicious/noExplicitAny: control types are complex with union types in hook form
                   control={form.control as any}
                   name="payerId"
                   render={({ field }) => (
@@ -336,7 +334,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
                 />
 
                 <FormField
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  // biome-ignore lint/suspicious/noExplicitAny: control types are complex with union types in hook form
                   control={form.control as any}
                   name="splitAmong"
                   render={() => (
@@ -348,7 +346,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
                         {eventParticipants.map((item) => (
                           <FormField
                             key={item.id}
-                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            // biome-ignore lint/suspicious/noExplicitAny: control types are complex with union types in hook form
                             control={form.control as any}
                             name="splitAmong"
                             render={({ field }) => {
@@ -364,7 +362,9 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
                                         return checked
                                           ? field.onChange([...(field.value || []), item.id])
                                           : field.onChange(
-                                              field.value?.filter((value: string) => value !== item.id)
+                                              field.value?.filter(
+                                                (value: string) => value !== item.id
+                                              )
                                             );
                                       }}
                                     />
@@ -386,7 +386,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
             {transactionType === 'TRANSFER' && (
               <div className="grid grid-cols-2 gap-4 rounded-md border p-4 bg-muted/50">
                 <FormField
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  // biome-ignore lint/suspicious/noExplicitAny: control types are complex with union types in hook form
                   control={form.control as any}
                   name="fromId"
                   render={({ field }) => (
@@ -411,7 +411,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
                   )}
                 />
                 <FormField
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  // biome-ignore lint/suspicious/noExplicitAny: control types are complex with union types in hook form
                   control={form.control as any}
                   name="toId"
                   render={({ field }) => (
@@ -439,7 +439,7 @@ export function AddTransactionDialog({ eventId, eventParticipants }: AddTransact
             )}
 
             <FormField
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              // biome-ignore lint/suspicious/noExplicitAny: control types are complex with union types in hook form
               control={form.control as any}
               name="note"
               render={({ field }) => (

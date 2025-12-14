@@ -1,9 +1,9 @@
-import { CreateEventDialog } from '@/features/events/components/create-event-dialog';
-import { EventService } from '@/services/event-service';
-import { Event } from '@/features/events/schemas';
+import { WalletIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { WalletIcon } from 'lucide-react';
+import { CreateEventDialog } from '@/features/events/components/create-event-dialog';
+import type { Event } from '@/features/events/schemas';
+import { EventService } from '@/services/event-service';
 
 export default async function Home() {
   const events = await EventService.getAllEvents();
