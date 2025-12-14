@@ -1,28 +1,29 @@
-import { db } from '@/lib/firebase';
+import { FirebaseError } from 'firebase/app'; // Import FirebaseError for specific error handling
 import {
+  addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
-  addDoc,
-  updateDoc,
-  query,
-  where,
   getDocs,
   orderBy,
-  deleteDoc,
+  query,
+  updateDoc,
+  where,
 } from 'firebase/firestore';
 import {
-  Event,
-  EventSchema,
+  type CreateEvent,
   CreateEventSchema,
-  CreateEvent,
+  type Event,
+  EventSchema,
+  type Participant,
   UpdateEventSchema,
-  Participant,
 } from '@/features/events/schemas';
-import { FirebaseError } from 'firebase/app'; // Import FirebaseError for specific error handling
+import { db } from '@/lib/firebase';
 
 const EVENTS_COLLECTION = 'events';
 
+// biome-ignore lint/complexity/noStaticOnlyClass: keeping this structure for now
 export class EventService {
   /**
    * Retrieves an Event by its ID.
@@ -167,7 +168,7 @@ export class EventService {
    * @returns A Promise that resolves when the event is archived.
    */
   static async archiveEvent(eventId: string): Promise<void> {
-    await this.updateEvent(eventId, { status: 'archived' });
+    await EventService.updateEvent(eventId, { status: 'archived' });
   }
 
   /**

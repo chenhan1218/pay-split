@@ -1,18 +1,18 @@
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import { TransactionService } from '../transaction-service';
-import { TransactionSchema } from '../../features/transactions/schemas';
+import { FirebaseError } from 'firebase/app';
 import {
+  addDoc,
+  collection,
+  deleteDoc,
   doc,
   getDoc,
-  collection,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  query,
   getDocs,
   orderBy,
+  query,
+  updateDoc,
 } from 'firebase/firestore';
-import { FirebaseError } from 'firebase/app';
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
+import { TransactionSchema } from '../../features/transactions/schemas';
+import { TransactionService } from '../transaction-service';
 
 // Mock Firebase Firestore functions
 vi.mock('firebase/firestore', () => ({

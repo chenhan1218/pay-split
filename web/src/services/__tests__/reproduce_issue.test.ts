@@ -1,10 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { EventService } from '../event-service';
-import { doc } from 'firebase/firestore';
 
 // Mock Firebase Firestore functions
 vi.mock('firebase/firestore', () => ({
-  doc: vi.fn((db, collection, id) => {
+  doc: vi.fn((_db, _collection, id) => {
     if (id === undefined) {
       // Simulate Firebase SDK behavior when path segment is undefined
       // In the real SDK, it performs string operations that might fail

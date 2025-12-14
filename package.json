@@ -8,20 +8,17 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --check .",
+    "format": "biome check .",
     "prepare": "husky"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "workspaces": [
-    "web"
-  ],
+  "workspaces": ["web"],
   "type": "commonjs",
   "devDependencies": {
+    "@biomejs/biome": "2.3.8",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.7",
-    "prettier": "^3.7.4",
-    "prettier-plugin-tailwindcss": "^0.7.2"
+    "lint-staged": "^16.2.7"
   }
 }
