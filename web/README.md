@@ -18,14 +18,11 @@ Follow these steps to set up and run the web application locally.
 
 ### 1. Install Dependencies
 
-Navigate to the `web/` directory and install the required Node.js packages:
+Install the required Node.js packages from the project root:
 
 ```bash
-cd web/
+# Run from the project root
 npm install
-# or yarn install
-# or pnpm install
-# or bun install
 ```
 
 **Shadcn UI Components**: After `npm install`, you may need to add Shadcn UI components if they are not already present (e.g., if starting from scratch). The installed components are located in `src/components/ui/`. You can add new components using:
@@ -65,9 +62,6 @@ Once dependencies are installed and environment variables are set, you can run t
 
 ```bash
 npm run dev
-# or yarn dev
-# or pnpm dev
-# or bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
