@@ -26,16 +26,10 @@
     git clone https://github.com/YOUR_GITHUB_USERNAME/pay-split.git
     cd pay-split
     ```
-2.  **安裝根目錄依賴 (Root Dependencies)**:
-    這將會安裝 `husky`, `lint-staged`, `prettier` 等專案管理工具。
+2.  **安裝依賴 (Install Dependencies)**:
+    這將會安裝根目錄工具與 Web 專案所需的套件。
     ```bash
-    npm install
-    ```
-3.  **安裝 Web 專案依賴**:
-    進入 `web` 目錄並安裝應用程式所需的套件。
-    ```bash
-    cd web
-    npm install
+    pnpm install
     ```
 
 ### 啟動開發伺服器
@@ -44,7 +38,7 @@
 
 ```bash
 cd web
-npm run dev
+pnpm dev
 ```
 
 接著在瀏覽器中開啟 [http://localhost:3000](http://localhost:3000) 即可看到畫面。
@@ -55,7 +49,7 @@ npm run dev
 
 ```bash
 cd web
-npm run test
+pnpm test
 ```
 
 ### 程式碼格式化與檢查
@@ -64,12 +58,12 @@ npm run test
 
 - **格式化所有檔案**:
   ```bash
-  npx prettier --write .
+  pnpm format
   ```
 - **檢查 Web 專案代碼**:
   ```bash
   cd web
-  npm run lint
+  pnpm lint
   ```
 
 ## 專案文件 (Documentation)
