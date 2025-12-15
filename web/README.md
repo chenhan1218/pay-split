@@ -18,17 +18,13 @@ Follow these steps to set up and run the web application locally.
 
 ### 1. Install Dependencies
 
-Navigate to the `web/` directory and install the required Node.js packages:
+From the project root (or `web/` directory), install the required Node.js packages:
 
 ```bash
-cd web/
-npm install
-# or yarn install
-# or pnpm install
-# or bun install
+pnpm install
 ```
 
-**Shadcn UI Components**: After `npm install`, you may need to add Shadcn UI components if they are not already present (e.g., if starting from scratch). The installed components are located in `src/components/ui/`. You can add new components using:
+**Shadcn UI Components**: After `pnpm install`, you may need to add Shadcn UI components if they are not already present (e.g., if starting from scratch). The installed components are located in `src/components/ui/`. You can add new components using:
 
 ```bash
 npx shadcn@latest add <component-name> --yes
@@ -64,10 +60,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 Once dependencies are installed and environment variables are set, you can run the development server:
 
 ```bash
-npm run dev
-# or yarn dev
-# or pnpm dev
-# or bun dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

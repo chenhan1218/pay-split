@@ -14,7 +14,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "workspaces": ["web"],
+  "packageManager": "pnpm@10.20.0",
+  "engines": {
+    "npm": "Please use pnpm",
+    "pnpm": ">=9"
+  },
   "type": "commonjs",
   "devDependencies": {
     "@biomejs/biome": "2.3.8",

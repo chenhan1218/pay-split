@@ -13,25 +13,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: |
-            package-lock.json
+          cache: 'pnpm'
 
       - name: Install Root Dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Check Formatting (Prettier)
-        run: npm run format
+        run: pnpm format
 
       - name: Lint Web
-        run: npm run lint --workspace=web
+        run: pnpm --filter web lint
 
       - name: Type Check Web
-        run: npm run type-check --workspace=web
+        run: pnpm --filter web type-check
 
       - name: Test Web
-        run: npm run test --workspace=web -- --coverage
+        run: pnpm --filter web test -- --coverage
