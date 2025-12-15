@@ -34,6 +34,7 @@
 - **`docs/INDEX.md`**: 專案入口與技術架構總覽。
 - **`docs/plans/active.md`**: 當前衝刺 (Sprint) 的任務清單。
   - **Task Granularity**: 更新任務清單時，不僅要寫 _What_，更要以子任務 (sub-tasks) 形式記錄 _Why_ 與關鍵實作細節 (Implementation Details)，確保上下文完整傳承。
+  - **Task Formatting**: 每個列表項目 (包含子任務) 之間必須保留一行空行，以減少 Git Merge Conflicts。
 - **`docs/specs/*.md`**: 功能規格書 (PRD)。
 
 ## 5. 技術架構上下文 (Technical Context)
