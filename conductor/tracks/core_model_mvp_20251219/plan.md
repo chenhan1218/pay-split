@@ -1,7 +1,7 @@
 # Track Plan: 完善核心資料模型與活動管理 MVP
 
 ## Phase 1: 基礎架構與資料模型
-- [ ] Task: 定義 Event 與 Expense 的 Zod Schemas
+- [x] Task: 定義 Event 與 Expense 的 Zod Schemas [dfbf10d]
   - Why: 確保資料庫讀寫的類型安全與驗證。
 - [ ] Task: 實作 Event Service 的核心 CRUD
   - Why: 封裝與 Firestore 的互動邏輯。
