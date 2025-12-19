@@ -3,7 +3,7 @@
 ## Phase 1: 基礎架構與資料模型
 - [x] Task: 定義 Event 與 Expense 的 Zod Schemas [dfbf10d]
   - Why: 確保資料庫讀寫的類型安全與驗證。
-- [ ] Task: 實作 Event Service 的核心 CRUD
+- [x] Task: 實作 Event Service 的核心 CRUD [2ec0543]
   - Why: 封裝與 Firestore 的互動邏輯。
   - Sub-task: 撰寫 Event Service 單元測試。
   - Sub-task: 實作 `createEvent`, `getEvent`, `listEvents`。
