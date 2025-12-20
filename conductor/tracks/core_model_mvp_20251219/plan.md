@@ -8,7 +8,7 @@
 ## Phase 2: 活動管理 UI
 - [x] Task: 實作「建立活動」對話框 (CreateEventDialog) [85f73f3]
   - Why: 提供使用者介面來新增活動。
-- [ ] Task: 實作活動列表頁面 (EventsListPage)
+- [x] Task: 實作活動列表頁面 (EventsListPage) [56b0d10]
   - Why: 展示所有進行中的活動。
 - [ ] Task: 實作活動詳情基礎頁面
   - Why: 作為消費紀錄展示的入口。
