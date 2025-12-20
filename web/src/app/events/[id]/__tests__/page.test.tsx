@@ -5,26 +5,16 @@ import { EventService } from '@/services/event-service';
 import { TransactionService } from '@/services/transaction-service';
 import EventDetailPage from '../page';
 
-// Mock dependencies
+// Mock services
 vi.mock('@/services/event-service');
 vi.mock('@/services/transaction-service');
+
+// Mock next/navigation
 vi.mock('next/navigation', () => ({
   notFound: vi.fn(),
 }));
-vi.mock('@/components/ui/card', () => ({
-  Card: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  CardHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  CardTitle: ({ children }: { children: React.ReactNode }) => <h1>{children}</h1>,
-  CardDescription: ({ children }: { children: React.ReactNode }) => <p>{children}</p>,
-  CardContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}));
-vi.mock('@/components/ui/badge', () => ({
-  Badge: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
-}));
-vi.mock('@/components/ui/separator', () => ({
-  Separator: () => <hr />,
-}));
-// Update mock path to the new location
+
+// Mock AddTransactionDialog
 vi.mock('@/features/transactions/components/add-transaction-dialog', () => ({
   AddTransactionDialog: () => <button type="button">Add Transaction</button>,
 }));
@@ -94,21 +84,20 @@ describe('EventDetailPage', () => {
     render(jsx);
 
     // Verify Event Details
-    expect(screen.getByText('Test Event')).toBeDefined();
-    expect(screen.getAllByText('USD')).toBeDefined();
+    expect(screen.getByText('Test Event')).toBeInTheDocument();
+    expect(screen.getAllByText('USD').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Alice').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Bob').length).toBeGreaterThan(0);
 
     // Verify Transactions
-    expect(screen.getByText('Lunch')).toBeDefined();
-    // Use regex to match formatted amount possibly broken by elements or spaces
-    expect(screen.getAllByText(/50\.00/)).toBeDefined();
+    expect(screen.getByText('Lunch')).toBeInTheDocument();
+    expect(screen.getAllByText(/50\.00/).length).toBeGreaterThan(0);
 
     // Check for note
-    expect(screen.getByText('Delicious tacos')).toBeDefined();
+    expect(screen.getByText('Delicious tacos')).toBeInTheDocument();
 
-    expect(screen.getByText('Taxi')).toBeDefined();
-    expect(screen.getAllByText(/20\.00/)).toBeDefined();
+    expect(screen.getByText('Taxi')).toBeInTheDocument();
+    expect(screen.getAllByText(/20\.00/).length).toBeGreaterThan(0);
   });
 
   it('renders "No transactions" message when there are no transactions', async () => {
@@ -118,7 +107,7 @@ describe('EventDetailPage', () => {
     const jsx = await EventDetailPage({ params });
     render(jsx);
 
-    expect(screen.getByText(/No transactions yet/)).toBeDefined();
+    expect(screen.getByText(/No transactions yet/)).toBeInTheDocument();
   });
 
   it('calls notFound when event is not found', async () => {
