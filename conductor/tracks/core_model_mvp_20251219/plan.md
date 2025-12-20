@@ -1,13 +1,9 @@
 # Track Plan: 完善核心資料模型與活動管理 MVP
 
-## Phase 1: 基礎架構與資料模型
+## Phase 1: 基礎架構與資料模型 [checkpoint: d39d930]
 - [x] Task: 定義 Event 與 Expense 的 Zod Schemas [dfbf10d]
-  - Why: 確保資料庫讀寫的類型安全與驗證。
 - [x] Task: 實作 Event Service 的核心 CRUD [2ec0543]
-  - Why: 封裝與 Firestore 的互動邏輯。
-  - Sub-task: 撰寫 Event Service 單元測試。
-  - Sub-task: 實作 `createEvent`, `getEvent`, `listEvents`。
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: 基礎架構與資料模型' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: 基礎架構與資料模型' (Protocol in workflow.md) [d39d930]
 
 ## Phase 2: 活動管理 UI
 - [ ] Task: 實作「建立活動」對話框 (CreateEventDialog)
