@@ -21,7 +21,7 @@ import {
 } from '@/features/events/schemas';
 import { db } from '@/lib/firebase';
 
-const EVENTS_COLLECTION = 'events';
+export const EVENTS_COLLECTION = 'events';
 
 // biome-ignore lint/complexity/noStaticOnlyClass: keeping this structure for now
 export class EventService {

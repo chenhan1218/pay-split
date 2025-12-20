@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 import { EventSchema } from '../../features/events/schemas';
-import { EventService } from '../event-service';
+import { EVENTS_COLLECTION, EventService } from '../event-service';
 
 // Mock Firebase Firestore functions
 vi.mock('firebase/firestore', () => ({
@@ -75,7 +75,7 @@ describe('EventService', () => {
       const result = await EventService.getEventById(mockEvent.id);
       expect(result).toEqual(mockEvent);
       expect(getDoc).toHaveBeenCalledWith({});
-      expect(doc).toHaveBeenCalledWith({}, 'events', mockEvent.id);
+      expect(doc).toHaveBeenCalledWith({}, EVENTS_COLLECTION, mockEvent.id);
       EventSchema.parse(result); // Ensure Zod validation passes
     });
 
@@ -221,7 +221,7 @@ describe('EventService', () => {
           updatedAt: expect.any(Number),
         })
       );
-      expect(doc).toHaveBeenCalledWith({}, 'events', mockEvent.id);
+      expect(doc).toHaveBeenCalledWith({}, EVENTS_COLLECTION, mockEvent.id);
     });
 
     it('should throw an error if Zod validation fails for updateData', async () => {
@@ -258,7 +258,7 @@ describe('EventService', () => {
           updatedAt: expect.any(Number),
         })
       );
-      expect(doc).toHaveBeenCalledWith({}, 'events', mockEvent.id);
+      expect(doc).toHaveBeenCalledWith({}, EVENTS_COLLECTION, mockEvent.id);
     });
   });
 
@@ -271,7 +271,7 @@ describe('EventService', () => {
       await EventService.deleteEvent(mockEvent.id);
 
       expect(deleteDoc).toHaveBeenCalledWith({});
-      expect(doc).toHaveBeenCalledWith({}, 'events', mockEvent.id);
+      expect(doc).toHaveBeenCalledWith({}, EVENTS_COLLECTION, mockEvent.id);
     });
 
     it('should throw an error if Firebase call fails', async () => {

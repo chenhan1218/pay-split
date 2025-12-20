@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { EventService } from '@/services/event-service';
 import Home from '../page';
 
@@ -7,16 +7,28 @@ import Home from '../page';
 vi.mock('@/services/event-service', () => ({
   EventService: {
     getAllEvents: vi.fn(),
+    createEvent: vi.fn(),
   },
 }));
 
-// Mock the CreateEventDialog component to avoid rendering issues and isolate the Home component test
-// Update the mock path to the new location
-vi.mock('@/features/events/components/create-event-dialog', () => ({
-  CreateEventDialog: () => <div data-testid="create-event-dialog">Create Event Dialog</div>,
+// Mock the CreateEventDialog component
+vi.mock('@/features/events/components/create-event-dialog', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('@/features/events/components/create-event-dialog')>();
+  return {
+    ...actual,
+  };
+});
+
+// Mock useRouter
+const mockPush = vi.fn();
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+  }),
 }));
 
-// Mock Next.js Link component
+// Mock Link
 vi.mock('next/link', () => ({
   default: ({ children, href }: { children: React.ReactNode; href: string }) => (
     <a href={href}>{children}</a>
@@ -50,16 +62,20 @@ describe('Home Page', () => {
     },
   ];
 
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('renders the list of events when events exist', async () => {
     vi.mocked(EventService.getAllEvents).mockResolvedValue(mockEvents);
 
     const jsx = await Home();
     render(jsx);
 
-    expect(screen.getByText('Test Event 1')).toBeDefined();
-    expect(screen.getByText('Test Event 2')).toBeDefined();
-    expect(screen.getByText(/2 participants/)).toBeDefined();
-    expect(screen.getByText(/1 participants/)).toBeDefined();
+    expect(screen.getByText('Test Event 1')).toBeInTheDocument();
+    expect(screen.getByText('Test Event 2')).toBeInTheDocument();
+    expect(screen.getByText(/2 participants/)).toBeInTheDocument();
+    expect(screen.getByText(/1 participants/)).toBeInTheDocument();
   });
 
   it('renders empty state when no events exist', async () => {
@@ -68,7 +84,7 @@ describe('Home Page', () => {
     const jsx = await Home();
     render(jsx);
 
-    expect(screen.getByText('No events created yet')).toBeDefined();
+    expect(screen.getByText('No events created yet')).toBeInTheDocument();
   });
 
   it('calls EventService.getAllEvents', async () => {
