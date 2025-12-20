@@ -5,11 +5,8 @@
 - [x] Task: 實作 Event Service 的核心 CRUD [2ec0543]
 - [x] Task: Conductor - User Manual Verification 'Phase 1: 基礎架構與資料模型' (Protocol in workflow.md) [d39d930]
 
-## Phase 2: 活動管理 UI
+## Phase 2: 活動管理 UI [checkpoint: 4c1f01c]
 - [x] Task: 實作「建立活動」對話框 (CreateEventDialog) [85f73f3]
-  - Why: 提供使用者介面來新增活動。
 - [x] Task: 實作活動列表頁面 (EventsListPage) [56b0d10]
-  - Why: 展示所有進行中的活動。
 - [x] Task: 實作活動詳情基礎頁面 [f122b9c]
-  - Why: 作為消費紀錄展示的入口。
-- [ ] Task: Conductor - User Manual Verification 'Phase 2: 活動管理 UI' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2: 活動管理 UI' (Protocol in workflow.md) [4c1f01c]
