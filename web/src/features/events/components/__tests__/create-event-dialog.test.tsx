@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useRouter } from 'next/navigation';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 import { EventService } from '@/services/event-service';
 import { CreateEventDialog } from '../create-event-dialog';
 
@@ -21,7 +21,7 @@ describe('CreateEventDialog', () => {
   beforeEach(() => {
     cleanup();
     vi.clearAllMocks();
-    (useRouter as any).mockReturnValue({ push: mockPush });
+    (useRouter as unknown as Mock).mockReturnValue({ push: mockPush });
   });
 
   it('renders the trigger button', () => {
@@ -51,7 +51,7 @@ describe('CreateEventDialog', () => {
   });
 
   it('submits correctly and navigates to the event page', async () => {
-    (EventService.createEvent as any).mockResolvedValueOnce({ id: 'new-id' });
+    (EventService.createEvent as unknown as Mock).mockResolvedValueOnce({ id: 'new-id' });
 
     render(<CreateEventDialog />);
     fireEvent.click(screen.getByText(/Create New Event/i));

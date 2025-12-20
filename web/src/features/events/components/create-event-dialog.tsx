@@ -33,7 +33,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ParticipantSchema } from '@/features/events/schemas';
 import { EventService } from '@/services/event-service';
 
 const formSchema = z.object({
