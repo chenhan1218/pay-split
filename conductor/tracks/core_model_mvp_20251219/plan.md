@@ -10,6 +10,6 @@
   - Why: 提供使用者介面來新增活動。
 - [x] Task: 實作活動列表頁面 (EventsListPage) [56b0d10]
   - Why: 展示所有進行中的活動。
-- [ ] Task: 實作活動詳情基礎頁面
+- [x] Task: 實作活動詳情基礎頁面 [f122b9c]
   - Why: 作為消費紀錄展示的入口。
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: 活動管理 UI' (Protocol in workflow.md)
