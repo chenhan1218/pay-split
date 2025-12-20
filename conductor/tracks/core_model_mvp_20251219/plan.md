@@ -6,7 +6,7 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: 基礎架構與資料模型' (Protocol in workflow.md) [d39d930]
 
 ## Phase 2: 活動管理 UI
-- [ ] Task: 實作「建立活動」對話框 (CreateEventDialog)
+- [x] Task: 實作「建立活動」對話框 (CreateEventDialog) [85f73f3]
   - Why: 提供使用者介面來新增活動。
 - [ ] Task: 實作活動列表頁面 (EventsListPage)
   - Why: 展示所有進行中的活動。
