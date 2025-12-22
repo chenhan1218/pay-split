@@ -1,50 +1,46 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Pay-Split 憲章
 
-## Core Principles
+一個簡單、公平且直覺的 Web 應用程式，專為解決團體分帳與共享消費管理而設計。Pay-Split 採用現代化 Web 技術構建，旨在消除多人付款時的尷尬與複雜計算，確保每個人都能公平分擔費用。
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+## 核心原則
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### I. 簡潔直覺性（Simplicity & Intuitiveness）
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+所有功能 MUST 優先考量使用者體驗，最小化摩擦。介面必須直覺易用，操作必須明確清楚，工作流程必須減少認知負擔。複雜計算 MUST 從使用者抽象化—使用者僅需輸入基本資訊，並獲得明顯、易理解的結果。若功能無法簡化，則必須重新考量。
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**設計理由**：Pay-Split 解決的是社交問題。使用者應信任應用程式正確處理複雜計算，同時保持完全透明。
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### II. 公平準確性（Fairness & Accuracy）
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+所有計算 MUST 數學正確且透明。分帳邏輯與結帳演算法 MUST 可審計、可解釋。Rounding 誤差必須明確說明。模稜兩可或偏頗的分配不可接受。計算邏輯的 Test Coverage MUST 全面—這是不可妥協的。
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+**設計理由**：應用程式的核心價值在於確保公平分擔。不正確或不透明的計算會破壞信任，違反應用程式的目的。
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+### III. Web-First 設計
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+應用程式 MUST 使用現代 Web 技術，遵循 Responsive Design 原則構建。UI MUST 在各設備（手機、平板、桌面）上可用。部署 MUST 運用 Web 標準與當代框架。使用體驗應是 Web-Native，而非附帶的 Mobile Wrapper。
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+**設計理由**：Web-First 確保廣泛可及性，降低平台特定的維護負擔。
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+### IV. 測試驅動開發（Test-Driven Development）
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+功能開發 MUST 採用測試優先：撰寫測試定義行為、驗證失敗、實施功能、驗證通過。此原則特別適用於計算邏輯、資料驗證、State Management。多步驟工作流程（新增參與者、記錄消費、結帳）需要 Integration Test。Code Review MUST 在合併前驗證測試完整性。
+
+**設計理由**：鑑於財務計算的關鍵性質，自動化 Test Coverage 是可靠性與未來維護的必要條件。
+
+## 開發流程
+
+- 所有功能開發始於已批准的 Spec 文件，定義需求與驗收標準。
+- Code Changes 必須遵循測試優先紀律：失敗測試 → 實施 → 通過測試 → Review。
+- Pull Request 必須包含 Test Coverage 說明；計算關鍵代碼需要全面的 Test Suite。
+- Code Review 檢查項目包含：測試執行通過、Spec 合規驗證、計算正確性確認。
+
+## 治理（Governance）
+
+此憲章優於所有其他專案指引。修訂需要記錄修訂理由、與專案目標的對齐，並獲得維護者批准後方可實施。
+
+- 所有 Pull Request 必須參照對應原則的合規性。
+- Breaking Changes 決定必須針對此憲章明確說明理由。
+- 建議每半年評審此憲章一次，確保原則與專案需求保持對齐。
+
+**版本**: 1.0.0 | **批准日期**: 2025-12-21 | **最後修訂**: 2025-12-21
